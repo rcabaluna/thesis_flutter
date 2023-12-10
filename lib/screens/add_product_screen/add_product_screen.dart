@@ -163,12 +163,33 @@ class AddProductScreenState extends State<AddProductScreen> {
               SizedBox(
                 height: 10,
               ),
+              Text("Products"),
+              SizedBox(
+                height: 10,
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width * 1,
+                padding: EdgeInsets.symmetric(horizontal: 32),
+                child: DropdownButton<Product>(
+                  value: selectedProduct,
+                  onChanged: (Product? newValue) {
+                    setState(() {
+                      selectedProduct = newValue!;
+                    });
+                  },
+                  items: buildDropdownItems(),
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
               Text("Product Price"),
               BuildInputField(
                 controller: productPrice,
                 hintText: "Set Price",
                 obscureText: false,
                 maxLines: 1,
+                keyboardType: TextInputType.number,
               ),
               if (selectedProduct != null)
                 Text(
@@ -185,6 +206,7 @@ class AddProductScreenState extends State<AddProductScreen> {
                 maxLines: 1,
                 controller: productStocks,
                 hintText: "Enter Quantity",
+                keyboardType: TextInputType.number,
               ),
               SizedBox(
                 height: 10,
@@ -202,23 +224,6 @@ class AddProductScreenState extends State<AddProductScreen> {
               ),
               SizedBox(
                 height: 10,
-              ),
-              Text("Products"),
-              SizedBox(
-                height: 10,
-              ),
-              Container(
-                width: MediaQuery.of(context).size.width * 1,
-                padding: EdgeInsets.symmetric(horizontal: 32),
-                child: DropdownButton<Product>(
-                  value: selectedProduct,
-                  onChanged: (Product? newValue) {
-                    setState(() {
-                      selectedProduct = newValue!;
-                    });
-                  },
-                  items: buildDropdownItems(),
-                ),
               ),
               SizedBox(
                 height: 30,
@@ -314,7 +319,7 @@ class AddProductScreenState extends State<AddProductScreen> {
   List<DropdownMenuItem<Product>> buildDropdownItems() {
     final List<Product> products = getIt<ProductNotifier>().products;
     List<DropdownMenuItem<Product>> items = [];
-
+    products.sort((a, b) => a.name.compareTo(b.name));
     for (var product in products) {
       items.add(DropdownMenuItem<Product>(
         value: product,

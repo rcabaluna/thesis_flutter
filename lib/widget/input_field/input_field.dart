@@ -5,10 +5,9 @@ class BuildInputField extends StatelessWidget {
   String hintText;
   Icon? icon;
   bool obscureText;
-
   int maxLines;
-
   VoidCallback? onEditingComplete;
+  TextInputType? keyboardType;
 
   BuildInputField(
       {required this.controller,
@@ -16,7 +15,8 @@ class BuildInputField extends StatelessWidget {
       this.onEditingComplete,
       this.icon,
       required this.obscureText,
-      required this.maxLines});
+      required this.maxLines,
+      this.keyboardType});
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +27,7 @@ class BuildInputField extends StatelessWidget {
         obscureText: obscureText,
         controller: controller,
         maxLines: maxLines,
+        keyboardType: keyboardType,
         decoration: InputDecoration(
           hintText: hintText,
           prefixIcon: icon,

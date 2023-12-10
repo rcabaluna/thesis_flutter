@@ -13,13 +13,13 @@ import 'package:local_marketplace/screens/edit_profile_screen/edit_profile_scree
 import 'package:local_marketplace/screens/main_screen/main_screen.dart';
 import 'package:local_marketplace/screens/my_order_screen/my_order_screen.dart';
 import 'package:local_marketplace/screens/my_ratings_screen/my_ratings_screen.dart';
-import 'package:local_marketplace/screens/order_details_screen/order_details_scree.dart';
 import 'package:local_marketplace/screens/order_history_screen/order_history_screen.dart';
 import 'package:local_marketplace/screens/product_detail_screen/product_detail_screen.dart';
 import 'package:local_marketplace/screens/profile_screen/profile_screen.dart';
 import 'package:local_marketplace/screens/rate_order_screen/rate_order_screen.dart';
 import 'package:local_marketplace/screens/registration_fee_screen/registration_review.dart';
 import 'package:local_marketplace/screens/registration_fee_screen/shop_registration_fee.dart';
+import 'package:local_marketplace/screens/shop_order_details_screen/shop_order_details_screen.dart';
 import 'package:local_marketplace/screens/shop_pending_orders_screen/shop_pending_orders_screen.dart';
 import 'package:local_marketplace/screens/shop_product_screen/shop_product.dart';
 import 'package:local_marketplace/screens/shop_profile/shop_profile.dart';
@@ -50,6 +50,8 @@ Route<dynamic> generateRoute(RouteSettings settings) {
           builder: (context) => RegistrationReviewScreen());
     case shopProfileRoute:
       return MaterialPageRoute(builder: (context) => ShopProfileScreen());
+    case shopOrderDetailsRoute:
+      return MaterialPageRoute(builder: (context) => ShopOrderDetailsScreen());
     case orderHistoryRoute:
       return MaterialPageRoute(builder: (context) => OrderHistortyScreen());
     case myOrderRoute:
