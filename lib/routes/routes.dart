@@ -13,6 +13,7 @@ import 'package:local_marketplace/screens/edit_profile_screen/edit_profile_scree
 import 'package:local_marketplace/screens/main_screen/main_screen.dart';
 import 'package:local_marketplace/screens/my_order_screen/my_order_screen.dart';
 import 'package:local_marketplace/screens/my_ratings_screen/my_ratings_screen.dart';
+import 'package:local_marketplace/screens/order_details_screen/order_details_scree.dart';
 import 'package:local_marketplace/screens/order_history_screen/order_history_screen.dart';
 import 'package:local_marketplace/screens/product_detail_screen/product_detail_screen.dart';
 import 'package:local_marketplace/screens/profile_screen/profile_screen.dart';
@@ -53,6 +54,8 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return MaterialPageRoute(builder: (context) => OrderHistortyScreen());
     case myOrderRoute:
       return MaterialPageRoute(builder: (context) => MyOrderScreen());
+    case orderDetailsRoute:
+      return MaterialPageRoute(builder: (context) => OrderDetailScreen());
     case editProfileRoute:
       return MaterialPageRoute(builder: (context) => EditProfileScreen());
     case myRatingRoute:

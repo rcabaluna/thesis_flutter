@@ -22,3 +22,4 @@ const myOrderRoute = '/my-orders';
 const myRatingRoute = '/my-rating';
 const rateOrderRoute = '/rate-order';
 const editProfileRoute = '/edit-profile';
+const orderDetailsRoute = '/order-details';
