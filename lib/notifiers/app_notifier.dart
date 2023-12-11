@@ -171,7 +171,6 @@ class AppNotifier extends ChangeNotifier {
     try {
       final result = await _shopService.getMyProducts("live");
       print("printing result");
-      print(result);
       myLiveProducts = result;
     } catch (e) {
       print(e);

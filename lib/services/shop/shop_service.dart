@@ -53,10 +53,8 @@ class ShopService {
     try {
       final result = await _networkService.getRequest(url);
       List<Map<String, dynamic>> data = List<Map<String, dynamic>>.from(result);
-      print(data);
       return data.map((json) {
         Product product = Product.fromJson(json["productId"]);
-        print(product.name);
         Seller seller = Seller.fromJson(json["sellerId"]);
         var urls = (json["imageUrls"] as List<dynamic>)
             .map((e) => e.toString())

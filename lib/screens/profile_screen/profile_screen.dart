@@ -150,6 +150,13 @@ class ProfileScreenState extends State<ProfileScreen> {
               getIt<NavigationService>()
                   .navigateTo(editProfileRoute, arguments: {});
             }),
+            SizedBox(
+              height: 10,
+            ),
+            buildDirectory("Logout", () {
+              getIt<NavigationService>()
+                  .navigateTo(editProfileRoute, arguments: {});
+            }),
           ],
         ),
       ),

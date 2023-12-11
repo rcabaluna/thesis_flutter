@@ -17,7 +17,6 @@ class ProductService {
       List<Map<String, dynamic>> data = List<Map<String, dynamic>>.from(result);
       return data.map((json) {
         Product product = Product.fromJson(json["productId"]);
-        print(product.name);
         Seller seller = Seller.fromJson(json["sellerId"]);
         var urls = (json["imageUrls"] as List<dynamic>)
             .map((e) => e.toString())
@@ -45,6 +44,21 @@ class ProductService {
         return product;
       }).toList();
     } on DioException catch (e) {
+      return [];
+    }
+  }
+
+  Future<List<Product>> searchProducts(String searchTerm) async {
+    final url = "$PRODUCT_URL/name/$searchTerm"; // Assuming the search query parameter is 'query'
+    try {
+      final result = await _networkService.getRequest(url);
+      List<Map<String, dynamic>> data = List<Map<String, dynamic>>.from(result);
+      return data.map((json) {
+        Product product = Product.fromJson(json);
+        return product;
+      }).toList();
+    } on DioError catch (e) {
+      print("Error fetching products: $e");
       return [];
     }
   }
