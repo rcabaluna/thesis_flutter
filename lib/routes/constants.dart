@@ -10,6 +10,7 @@ const shopProfileRoute = '/shop-profile';
 const shopProductRoute = '/shop-product';
 const addProductRoute = '/add-product';
 const shopPendingOrderRoute = '/shop-pendingOrder';
+const shopOrderDetailsRoute = '/shop-orderDetails';
 
 const cartRoute = '/cart';
 const checkoutRoute = "/checkout";
@@ -22,3 +23,4 @@ const myOrderRoute = '/my-orders';
 const myRatingRoute = '/my-rating';
 const rateOrderRoute = '/rate-order';
 const editProfileRoute = '/edit-profile';
+const orderDetailsRoute = '/order-details';

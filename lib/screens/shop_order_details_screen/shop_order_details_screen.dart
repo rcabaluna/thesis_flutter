@@ -6,11 +6,11 @@ import 'package:local_marketplace/common/dependency_locator.dart';
 import 'package:local_marketplace/routes/constants.dart';
 import 'package:local_marketplace/services/common/navigation_service.dart';
 
-class OrderDetailScreen extends StatefulWidget {
-  OrderDetailScreenState createState() => OrderDetailScreenState();
+class ShopOrderDetailsScreen extends StatefulWidget {
+  ShopOrderDetailsScreenState createState() => ShopOrderDetailsScreenState();
 }
 
-class OrderDetailScreenState extends State<OrderDetailScreen> {
+class ShopOrderDetailsScreenState extends State<ShopOrderDetailsScreen> {
   bool isExpanded = false;
   @override
   Widget build(BuildContext context) {
@@ -20,7 +20,7 @@ class OrderDetailScreenState extends State<OrderDetailScreen> {
         leading: IconButton(
             onPressed: () {
               getIt<NavigationService>()
-                  .navigateTo(orderHistoryRoute, arguments: {});
+                  .navigateTo(shopPendingOrderRoute, arguments: {});
             },
             icon: Icon(Icons.arrow_back)),
       ),

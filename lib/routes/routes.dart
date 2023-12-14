@@ -19,6 +19,7 @@ import 'package:local_marketplace/screens/profile_screen/profile_screen.dart';
 import 'package:local_marketplace/screens/rate_order_screen/rate_order_screen.dart';
 import 'package:local_marketplace/screens/registration_fee_screen/registration_review.dart';
 import 'package:local_marketplace/screens/registration_fee_screen/shop_registration_fee.dart';
+import 'package:local_marketplace/screens/shop_order_details_screen/shop_order_details_screen.dart';
 import 'package:local_marketplace/screens/shop_pending_orders_screen/shop_pending_orders_screen.dart';
 import 'package:local_marketplace/screens/shop_product_screen/shop_product.dart';
 import 'package:local_marketplace/screens/shop_profile/shop_profile.dart';
@@ -49,10 +50,14 @@ Route<dynamic> generateRoute(RouteSettings settings) {
           builder: (context) => RegistrationReviewScreen());
     case shopProfileRoute:
       return MaterialPageRoute(builder: (context) => ShopProfileScreen());
+    case shopOrderDetailsRoute:
+      return MaterialPageRoute(builder: (context) => ShopOrderDetailsScreen());
     case orderHistoryRoute:
       return MaterialPageRoute(builder: (context) => OrderHistortyScreen());
     case myOrderRoute:
       return MaterialPageRoute(builder: (context) => MyOrderScreen());
+    case orderDetailsRoute:
+      return MaterialPageRoute(builder: (context) => OrderDetailScreen());
     case editProfileRoute:
       return MaterialPageRoute(builder: (context) => EditProfileScreen());
     case myRatingRoute:

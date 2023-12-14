@@ -1,6 +1,9 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
+import 'package:local_marketplace/common/dependency_locator.dart';
+import 'package:local_marketplace/routes/constants.dart';
+import 'package:local_marketplace/services/common/navigation_service.dart';
 
 class ShopPendingOrderScreen extends StatefulWidget {
   ShopPendingOrderScreenState createState() => ShopPendingOrderScreenState();
@@ -41,7 +44,12 @@ class ShopPendingOrderScreenState extends State<ShopPendingOrderScreen> {
                   )
                 ],
               ),
-              buildOrderContainer()
+              GestureDetector(
+                  onTap: () {
+                    getIt<NavigationService>()
+                        .navigateTo(shopOrderDetailsRoute, arguments: {});
+                  },
+                  child: buildOrderContainer())
             ],
           ),
         ),
