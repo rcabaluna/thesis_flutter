@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
-
 import 'package:flutter/material.dart';
 import 'package:local_marketplace/common/dependency_locator.dart';
 import 'package:local_marketplace/models/cart/cart.dart';
@@ -18,8 +16,8 @@ class _CartScreenState extends State<CartScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          "Product",
+        title: Text(
+          "Cart",
           style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18),
         ),
         actions: [],
@@ -36,7 +34,6 @@ class _CartScreenState extends State<CartScreen> {
                       key: Key(
                           cartNotifier.cartItems[index].product.id.toString()),
                       onDismissed: (direction) {
-                        // Remove the item from the cart
                         cartNotifier
                             .removeCartItem(cartNotifier.cartItems[index]);
                       },
@@ -58,43 +55,43 @@ class _CartScreenState extends State<CartScreen> {
                   },
                 ),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 10, right: 10),
-                    child: Text(
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
                       'Total: Php ${cartNotifier.totalCartPrice.toStringAsFixed(2)}',
-                      style:
-                          TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: GestureDetector(
-                      onTap: () {
+                    ElevatedButton(
+                      onPressed: () {
                         getIt<NavigationService>()
                             .navigateTo(checkoutRoute, arguments: {});
                       },
-                      child: Container(
-                        color: Colors.green,
-                        padding: const EdgeInsets.only(top: 15, bottom: 15),
-                        child: Center(
-                          child: Column(
-                            children: [
-                              Text(
-                                "Check Out  ",
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w700),
-                              ),
-                            ],
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.green,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 12.0, horizontal: 16.0),
+                        child: Text(
+                          "Checkout",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
                     ),
-                  )
-                ],
+                  ],
+                ),
               ),
             ],
           );
@@ -108,7 +105,7 @@ class _CartScreenState extends State<CartScreen> {
     CartNotifier cartNotifier,
   ) {
     return Padding(
-      padding: const EdgeInsets.all(10.0),
+      padding: const EdgeInsets.all(16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -118,95 +115,85 @@ class _CartScreenState extends State<CartScreen> {
                 Icons.store_outlined,
                 size: 30,
               ),
-              Text(cart.product.seller.shopName),
+              SizedBox(width: 8),
+              Text(
+                cart.product.seller.shopName,
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
             ],
           ),
+          SizedBox(height: 8),
           Card(
+            elevation: 4,
             margin: EdgeInsets.all(0.0),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Expanded(
-                  flex: 1,
-                  child: Checkbox(
-                    value: cart.includeInTotal,
-                    onChanged: (value) {
-                      setState(() {
-                        cart.includeInTotal = value ?? false;
-                        cartNotifier.updateTotalPrice();
-                      });
-                    },
-                  ),
+                Checkbox(
+                  value: cart.includeInTotal,
+                  onChanged: (value) {
+                    setState(() {
+                      cart.includeInTotal = value ?? false;
+                      cartNotifier.updateTotalPrice();
+                    });
+                  },
                 ),
-                Expanded(
-                  flex: 2,
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
                   child: Image.network(
                     cart.product.imageUrls.first,
                     fit: BoxFit.cover,
+                    height: 80,
+                    width: 80,
                   ),
                 ),
                 Expanded(
-                  flex: 2,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        cart.product.product.name,
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      Text(
-                        "Php ${cart.product.product.price.toStringAsFixed(2)}",
-                        style: TextStyle(fontSize: 10),
-                      ),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  flex: 3,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      IconButton(
-                        icon: Icon(Icons.remove),
-                        onPressed: () {
-                          if (cart.quantity > 1) {
-                            cartNotifier.updateCartItemQuantity(
-                              cart,
-                              cart.quantity - 1,
-                            );
-                            cartNotifier.updateTotalPrice();
-                          }
-                        },
-                      ),
-                      // Replace the counter with a TextField
-                      Expanded(
-                        child: TextField(
-                          textAlign: TextAlign.center,
-                          keyboardType: TextInputType.number,
-                          controller: TextEditingController(
-                              text: cart.quantity.toString()),
-                          onChanged: (value) {
-                            // Validate input and update quantity
-                            int newQuantity = int.tryParse(value) ?? 0;
-                            print(newQuantity);
-                            cartNotifier.updateCartItemQuantity(
-                                cart, newQuantity);
-                            cartNotifier.updateTotalPrice();
-                          },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          cart.product.product.name,
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                          overflow: TextOverflow.ellipsis,
                         ),
-                      ),
-                      IconButton(
-                        icon: Icon(Icons.add),
-                        onPressed: () {
-                          cartNotifier.updateCartItemQuantity(
-                            cart,
-                            cart.quantity + 1,
-                          );
-                          cartNotifier.updateTotalPrice();
-                        },
-                      ),
-                    ],
+                        Text(
+                          "Php ${cart.product.product.price.toStringAsFixed(2)}",
+                          style: TextStyle(fontSize: 12),
+                        ),
+                        SizedBox(height: 8),
+                        Row(
+                          children: [
+                            IconButton(
+                              icon: Icon(Icons.remove),
+                              onPressed: () {
+                                if (cart.quantity > 1) {
+                                  cartNotifier.updateCartItemQuantity(
+                                    cart,
+                                    cart.quantity - 1,
+                                  );
+                                  cartNotifier.updateTotalPrice();
+                                }
+                              },
+                            ),
+                            Text(
+                              cart.quantity.toString(),
+                              style: TextStyle(fontSize: 16),
+                            ),
+                            IconButton(
+                              icon: Icon(Icons.add),
+                              onPressed: () {
+                                cartNotifier.updateCartItemQuantity(
+                                  cart,
+                                  cart.quantity + 1,
+                                );
+                                cartNotifier.updateTotalPrice();
+                              },
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],

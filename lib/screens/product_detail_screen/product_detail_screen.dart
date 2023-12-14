@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:local_marketplace/common/constants.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -52,38 +54,7 @@ class ProductDetailScreen extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        CarouselSlider(
-                          options: CarouselOptions(
-                            height: 200.0,
-                            enlargeCenterPage: true,
-                            autoPlay: true,
-                            aspectRatio: 16 / 9,
-                            autoPlayCurve: Curves.fastOutSlowIn,
-                            enableInfiniteScroll: true,
-                            autoPlayAnimationDuration:
-                                Duration(milliseconds: 800),
-                            viewportFraction: 0.8,
-                          ),
-                          items: snapShot.productBySeller!.imageUrls
-                              .map((imageUrl) {
-                            return Builder(
-                              builder: (BuildContext context) {
-                                return Container(
-                                  width: MediaQuery.of(context).size.width,
-                                  margin: EdgeInsets.symmetric(horizontal: 5.0),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(15),
-                                    color: const Color(0xffe5e5e5),
-                                    image: DecorationImage(
-                                      image: NetworkImage(imageUrl),
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                );
-                              },
-                            );
-                          }).toList(),
-                        ),
+                        
                         const SizedBox(
                           height: 30,
                         ),
@@ -123,63 +94,63 @@ class ProductDetailScreen extends StatelessWidget {
                   );
                 },
               )),
-          Positioned(
-            bottom: 0,
-            child: Container(
-              width: MediaQuery.of(context).size.width,
-              decoration: BoxDecoration(
-                  border: Border(
-                      top: BorderSide(
-                          width: 1,
-                          color: const Color(0xff929292).withOpacity(0.5)))),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () {
-                        final product =
-                            getIt<ProductNotifier>().productBySeller!;
-                        getIt<CartNotifier>().addItemsToCart(product);
-                      },
-                      child: const Padding(
-                        padding: EdgeInsets.only(left: 13, right: 13),
-                        child: Column(
-                          children: [
-                            Icon(
-                              Icons.shopping_cart_outlined,
-                              size: 16,
-                            ),
-                            Text(
-                              "Add to Cart",
-                              style: TextStyle(fontSize: 10),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    flex: 3,
-                    child: GestureDetector(
-                      onTap: () {},
-                      child: Container(
-                        color: Colors.green,
-                        padding: const EdgeInsets.only(top: 15, bottom: 15),
-                        child: const Center(
-                          child: Text(
-                            "Buy Now",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w700),
-                          ),
-                        ),
-                      ),
-                    ),
-                  )
-                ],
-              ),
-            ),
-          )
+          // Positioned(
+          //   bottom: 0,
+          //   child: Container(
+          //     width: MediaQuery.of(context).size.width,
+          //     decoration: BoxDecoration(
+          //         border: Border(
+          //             top: BorderSide(
+          //                 width: 1,
+          //                 color: const Color(0xff929292).withOpacity(0.5)))),
+          //     child: Row(
+          //       children: [
+          //         Expanded(
+          //           child: GestureDetector(
+          //             onTap: () {
+          //               final product =
+          //                   getIt<ProductNotifier>().productBySeller!;
+          //               getIt<CartNotifier>().addItemsToCart(product);
+          //             },
+          //             child: const Padding(
+          //               padding: EdgeInsets.only(left: 13, right: 13),
+          //               child: Column(
+          //                 children: [
+          //                   Icon(
+          //                     Icons.shopping_cart_outlined,
+          //                     size: 16,
+          //                   ),
+          //                   Text(
+          //                     "Add to Cart",
+          //                     style: TextStyle(fontSize: 10),
+          //                   )
+          //                 ],
+          //               ),
+          //             ),
+          //           ),
+          //         ),
+          //         Expanded(
+          //           flex: 3,
+          //           child: GestureDetector(
+          //             onTap: () {},
+          //             child: Container(
+          //               color: Colors.green,
+          //               padding: const EdgeInsets.only(top: 15, bottom: 15),
+          //               child: const Center(
+          //                 child: Text(
+          //                   "Buy Now",
+          //                   style: TextStyle(
+          //                       color: Colors.white,
+          //                       fontWeight: FontWeight.w700),
+          //                 ),
+          //               ),
+          //             ),
+          //           ),
+          //         )
+          //       ],
+          //     ),
+          //   ),
+          // )
         ],
       ),
     );
@@ -187,22 +158,22 @@ class ProductDetailScreen extends StatelessWidget {
 
   Widget buildSellerContainer(Seller seller) {
     return Row(
-      children: [
-        Container(
-          height: 50,
-          width: 50,
-          decoration: BoxDecoration(
-              image: DecorationImage(image: NetworkImage(seller.imageUrl)),
-              borderRadius: BorderRadius.circular(25)),
-        ),
-        const SizedBox(
-          width: 10,
-        ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [Text(seller.shopName), const Text("Seller")],
-        )
-      ],
+      // children: [
+      //   Container(
+      //     height: 50,
+      //     width: 50,
+      //     decoration: BoxDecoration(
+      //         image: DecorationImage(image: NetworkImage(seller.imageUrl)),
+      //         borderRadius: BorderRadius.circular(25)),
+      //   ),
+      //   const SizedBox(
+      //     width: 10,
+      //   ),
+      //   Column(
+      //     crossAxisAlignment: CrossAxisAlignment.start,
+      //     children: [Text(seller.shopName), const Text("Seller")],
+      //   )
+      // ],
     );
   }
 }

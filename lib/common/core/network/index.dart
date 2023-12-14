@@ -20,6 +20,7 @@ class NetworkService {
       HttpHeaders.contentTypeHeader: "application/json",
     };
 
+
     return headers;
   }
 

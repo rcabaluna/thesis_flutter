@@ -5,6 +5,7 @@ import 'package:local_marketplace/notifiers/cart/cart_notifier.dart';
 import 'package:local_marketplace/routes/constants.dart';
 import 'package:local_marketplace/screens/cart_screen/cart_screen.dart';
 import 'package:local_marketplace/screens/products_list_screen/products_list_screen.dart';
+// import 'package:local_marketplace/screens/products_list_screen/products_list_screen%20orig.dart';
 import 'package:local_marketplace/screens/profile_screen/profile_screen.dart';
 import 'package:local_marketplace/screens/search_screen/search_screen.dart';
 import 'package:local_marketplace/services/common/navigation_service.dart';
@@ -21,10 +22,10 @@ class MainScreenState extends State<MainScreen> {
   final pages = [
     ProductsListScreen(),
     SearchScreen(),
-    // CartScreen(),
-    Text("page 3"),
+    CartScreen(),
     ProfileScreen(),
   ];
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -90,8 +91,8 @@ class MainScreenState extends State<MainScreen> {
                               .navigateTo(cartRoute, arguments: {});
                         },
                         child: Container(
-                          height: 21,
-                          width: 21,
+                          height: 25,
+                          width: 25,
                           child: cartNotifier.cartLength > 0
                               ? badges.Badge(
                                   position: badges.BadgePosition.topEnd(
@@ -126,11 +127,11 @@ class MainScreenState extends State<MainScreen> {
 
   Widget buildBottomBarItem(IconData icon, String name, int index) {
     final Color color =
-        pageIndex == index ? const Color(0xff03A696) : Colors.black;
+        pageIndex == index ? Colors.green : Colors.black;
 
     return Container(
-      height: 21,
-      width: 21,
+      height: 25,
+      width: 25,
       child: Icon(
         icon,
         color: color,

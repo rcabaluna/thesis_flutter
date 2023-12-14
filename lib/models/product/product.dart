@@ -19,4 +19,6 @@ class Product {
     unit = json["unit"];
     id = json["_id"];
   }
+
+  get sellerId => null;
 }

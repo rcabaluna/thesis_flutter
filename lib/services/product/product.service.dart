@@ -40,7 +40,6 @@ class ProductService {
       List<Map<String, dynamic>> data = List<Map<String, dynamic>>.from(result);
       return data.map((json) {
         Product product = Product.fromJson(json);
-
         return product;
       }).toList();
     } on DioException catch (e) {
@@ -49,7 +48,7 @@ class ProductService {
   }
 
   Future<List<Product>> searchProducts(String searchTerm) async {
-    final url = "$PRODUCT_URL/name/$searchTerm"; // Assuming the search query parameter is 'query'
+    final url = "$PRODUCT_URL/name/$searchTerm";
     try {
       final result = await _networkService.getRequest(url);
       List<Map<String, dynamic>> data = List<Map<String, dynamic>>.from(result);
@@ -57,9 +56,55 @@ class ProductService {
         Product product = Product.fromJson(json);
         return product;
       }).toList();
+    // ignore: deprecated_member_use
     } on DioError catch (e) {
       print("Error fetching products: $e");
       return [];
     }
   }
+
+  Future<List<Product>> searchProductsbyCategory(String searchInput) async {
+    final url = "$PRODUCT_URL/categoryId/$searchInput";
+    try {
+      final result = await _networkService.getRequest(url);
+      List<Map<String, dynamic>> data = List<Map<String, dynamic>>.from(result);
+      return data.map((json) {
+        Product product = Product.fromJson(json);
+        return product;
+      }).toList();
+    // ignore: deprecated_member_use
+    } on DioError catch (e) {
+      print("Error fetching products: $e");
+      return [];
+    }
+  }
+
+  Future<List<ProductBySeller>> getSingleProductWithSellerInfo(String searchInput) async
+  {
+   const url = "$PRODUCT_URL/productId/6546583c18beedec109c11f1";
+      try {
+      final result = await _networkService.getRequest(url);
+      List<Map<String, dynamic>> data = List<Map<String, dynamic>>.from(result);
+      return data.map((json) {
+        Product product = Product.fromJson(json["productId"]);
+        Seller seller = Seller.fromJson(json["sellerId"]);
+        var urls = (json["imageUrls"] as List<dynamic>)
+            .map((e) => e.toString())
+            .toList();
+            
+        return ProductBySeller(
+            product: product,
+            id: json["_id"],
+            seller: seller,
+            imageUrls: urls,
+            price: json["price"],
+            qty: json["quantity"]);
+      }).toList();
+    } on DioException catch (e) {
+      return [];
+    } 
+
+  }
+  
+
 }

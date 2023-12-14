@@ -72,7 +72,6 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case cartRoute:
       return MaterialPageRoute(builder: (context) => CartScreen());
     case checkoutRoute:
-      print(getIt<AppNotifier>().isLoggedIn);
       if (getIt<AppNotifier>().isLoggedIn) {
         return MaterialPageRoute(builder: (context) => CheckoutScreen());
       } else {
