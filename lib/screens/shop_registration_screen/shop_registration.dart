@@ -282,30 +282,32 @@ class ShopRegistrationScreenState extends State<ShopRegistrationScreen> {
                   onPressed: () async {
                     final ShopService shopService = ShopService();
                     context.loaderOverlay.show();
-                    final barangay = getIt<AppNotifier>()
-                        .barangay
-                        .where(
-                            (element) => element.code == dropDownBarangayValue)
-                        .first
-                        .name;
-                    final munCity = getIt<AppNotifier>()
-                        .munCity
-                        .where(
-                            (element) => element.code == dropDownMunCityValue)
-                        .first
-                        .name;
-                    final province = getIt<AppNotifier>()
-                        .province
-                        .where(
-                            (element) => element.code == dropDownProvinceValue)
-                        .first
-                        .name;
+                    // final barangay = getIt<AppNotifier>()
+                    //     .barangay
+                    //     .where(
+                    //         (element) => element.code == dropDownBarangayValue)
+                    //     .first
+                    //     .name;
+                    // final munCity = getIt<AppNotifier>()
+                    //     .munCity
+                    //     .where(
+                    //         (element) => element.code == dropDownMunCityValue)
+                    //     .first
+                    //     .name;
+                    // final province = getIt<AppNotifier>()
+                    //     .province
+                    //     .where(
+                    //         (element) => element.code == dropDownProvinceValue)
+                        // .first
+                        // .name;
 
                     final data = {
                       "shopName": shopName.text,
                       "email": email.text,
                       "phoneNumber": phoneNumber.text,
-                      "address": "$barangay $munCity $province"
+                      // "address": "$barangay $munCity $province"
+                      "address": "Cagayan de Oro City"
+
                     };
 
                     try {

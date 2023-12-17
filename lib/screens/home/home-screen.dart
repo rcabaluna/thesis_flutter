@@ -1,8 +1,4 @@
-import 'dart:async';
-import 'dart:convert';
-import 'dart:developer';
-import 'dart:io';
-import 'dart:js_interop';
+// ignore_for_file: depend_on_referenced_packages, file_names, non_constant_identifier_names, unused_import
 
 import 'package:flutter/material.dart';
 import 'package:local_marketplace/common/dependency_locator.dart';
@@ -10,10 +6,8 @@ import 'package:local_marketplace/models/category/category.dart';
 import 'package:local_marketplace/models/product/product.dart';
 import 'package:local_marketplace/models/productbyseller/product_by_seller.dart';
 import 'package:local_marketplace/notifiers/category/category_notifier.dart';
-import 'package:local_marketplace/notifiers/product/product_notifier.dart';
 import 'package:local_marketplace/routes/constants.dart';
 import 'package:local_marketplace/screens/product_detail_screen/product_detail_screen.dart';
-import 'package:local_marketplace/screens/search_screen/search_screen.dart';
 import 'package:local_marketplace/services/common/navigation_service.dart';
 import 'package:local_marketplace/services/product/product.service.dart';
 import 'package:provider/provider.dart';
@@ -24,10 +18,8 @@ class ProductsListScreen extends StatefulWidget {
 
 class ProductsListScreenState extends State<ProductsListScreen> {
   
-  TextEditingController _searchController = TextEditingController();
   bool isLoading = false;
   bool searchPending = false;
-  Timer? _searchTimer;
   ProductService productService = ProductService();
   List<ProductWidget> productWidgets = [];
   bool isSearching = false;
@@ -42,58 +34,58 @@ class ProductsListScreenState extends State<ProductsListScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.only(top: 5),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Padding(
-            padding: EdgeInsets.only(left: 20),
-            child: Text(
-              "Explore",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
-            ),
+Widget build(BuildContext context) {
+  return Container(
+    padding: const EdgeInsets.only(top: 5),
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // First Row
+        const Padding(
+          padding: EdgeInsets.only(left: 20,top: 10),
+          child: Text(
+            "Home",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25, color: Color(0xFF2B2B2B)),
           ),
-          const SizedBox(
-            height: 5,
-          ),
-          Consumer<CategoryNotifier>(
-            builder: (_, data, __) {
-              return Container(
-                width: MediaQuery.of(context).size.width,
-                height: 80,
-                child: buildCategoryList(
-                    [Category(name: "All", id: "0"), ...data.categories]),
-              );
-            },
-          ),
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 8.0), // Add padding as needed
-              child: Center(
-                child:
-                  showLoader
-                    ? CircularProgressIndicator()
-                    : productWidgets.isEmpty
-                    ? NoProductFound()
-                    : GridView.builder(
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2, // 2 columns
-                          crossAxisSpacing: 3.0,
-                          mainAxisSpacing: 3.0,
+        ),
+        
+        // Second Row
+        Consumer<CategoryNotifier>(
+          builder: (_, data, __) {
+            return Container(
+              width: MediaQuery.of(context).size.width,
+              height: 80,
+              child: buildCategoryList([Category(name: "All", id: "0"), ...data.categories]),
+            );
+          },
+        ),
+        // Third Row
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0), // Add padding as needed
+            child: Center(
+              child: showLoader
+                  ? const CircularProgressIndicator()
+                  : productWidgets.isEmpty
+                      ? NoProductFound()
+                      : GridView.builder(
+                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2, // 2 columns
+                            crossAxisSpacing: 3.0,
+                            mainAxisSpacing: 3.0,
+                          ),
+                          itemCount: productWidgets.length,
+                          itemBuilder: (_, index) => productWidgets[index],
                         ),
-                        itemCount: productWidgets.length,
-                        itemBuilder: (_, index) => productWidgets[index],
-                    ),
-              ),
             ),
           ),
-        ],
-      ),
-    );
-  }
+        ),
+      ],
+    ),
+  );
+}
+
 
   Widget buildCategoryList(List<Category> categories) {
     return ListView.builder(
@@ -118,7 +110,8 @@ class ProductsListScreenState extends State<ProductsListScreen> {
     );
   }
 
-  Widget buildCategoryButton(String name, String categoryId, bool isSelected) {
+  Widget buildCategoryButton(
+      String name, String categoryId, bool isSelected) {
     return ElevatedButton(
       onPressed: () {
         setState(() {
@@ -128,16 +121,16 @@ class ProductsListScreenState extends State<ProductsListScreen> {
       },
       style: ButtonStyle(
         backgroundColor: MaterialStateProperty.all<Color>(
-          isSelected ? Color(0xff00AE11) : Colors.grey,
+          isSelected ? const Color(0xff00AE11) : Colors.grey,
         ),
         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
           RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
           ),
         ),
-        elevation: MaterialStateProperty.all<double>(isSelected ? 5.0 : 0.0),
+        elevation: MaterialStateProperty.all<double>(isSelected ? 3.0 : 0.0),
         shadowColor: MaterialStateProperty.all<Color>(
-          isSelected ? Color(0xff00AE11) : const Color.fromARGB(0, 228, 228, 228),
+          isSelected ? const Color(0xff00AE11) : const Color.fromARGB(0, 228, 228, 228),
         ),
       ),
       child: Text(
@@ -148,7 +141,6 @@ class ProductsListScreenState extends State<ProductsListScreen> {
       ),
     );
   }
-
 
   Widget NoProductFound() {
     return Container(
@@ -215,60 +207,66 @@ class ProductsListScreenState extends State<ProductsListScreen> {
 
 
 class ProductWidget extends StatelessWidget {
-  final Product product;
+  final ProductBySeller productseller;
 
-  ProductWidget(this.product);
+  ProductWidget(this.productseller);
 
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-    
-        getIt<NavigationService>().navigateTo(productDetailRoute, arguments: {});
-      },
-      child: Card(
-        elevation: 3,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15.0),
+ @override
+Widget build(BuildContext context) {
+  return GestureDetector(
+    onTap: () {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ProductDetailsScreen(productseller.product.id),
         ),
-        child: Container(
-          height: 240,
-          padding: EdgeInsets.all(10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.vertical(top: Radius.circular(11.0)),
-                child: Image.network(
-                  product.imageUrl,
-                  height: 130, // Reduced image height
-                  fit: BoxFit.cover,
-                ),
+      );
+    },
+    child: Card(
+      elevation: 1,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15.0),
+      ),
+      color: Colors.white, // Set the background color to white
+      child: Container(
+        padding: EdgeInsets.all(10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            ClipRRect(
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(11.0)),
+              child: Image.network(
+                productseller.product.imageUrl,
+                height: 110, // Reduced image height
+                fit: BoxFit.cover,
               ),
-              SizedBox(height: 10),
-              Text(
-                product.name,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16, // Slightly reduced font size
-                ),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
+            ),
+            SizedBox(height: 10),
+            Text(
+              productseller.product.name,
+              style: const TextStyle(
+                color: Color(0xFF2B2B2B),
+                fontWeight: FontWeight.bold,
+                fontSize: 16, // Slightly reduced font size
               ),
-              SizedBox(height: 5),
-              Text(
-                '\₱${product.price.toStringAsFixed(2)}/${product.unit}',
-                style: TextStyle(
-                  fontSize: 14, // Slightly reduced font size
-                  color: Color(0xff00AE11),
-                ),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+            SizedBox(height: 5),
+            Text(
+              '\₱${productseller.price.toStringAsFixed(2)}/${productseller.product.unit}',
+              style: const TextStyle(
+                fontSize: 14, // Slightly reduced font size
+                color: Color(0xFF2ECC40),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
-    );
-  }
+    ),
+  );
+}
+
 }
 
 

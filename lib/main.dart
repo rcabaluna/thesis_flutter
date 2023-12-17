@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:local_marketplace/common/dependency_locator.dart';
 import 'package:local_marketplace/notifiers/product/product_notifier.dart';
 import 'package:local_marketplace/provider_setup.dart';
@@ -9,6 +10,8 @@ import 'package:local_marketplace/routes/routes.dart';
 import 'package:local_marketplace/services/common/navigation_service.dart';
 import 'package:provider/provider.dart';
 import 'package:loader_overlay/loader_overlay.dart';
+import 'package:google_fonts/google_fonts.dart';
+
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,16 +32,17 @@ class MyApp extends StatelessWidget {
         ...categoryProviders,
       ],
       child: GlobalLoaderOverlay(
-        overlayColor: Colors.grey[600]!.withOpacity(0.6),
+        overlayColor: Colors.green!.withOpacity(0.6),
         child: MaterialApp(
           onGenerateRoute: generateRoute,
           initialRoute: splashScreenRoute,
           navigatorKey: getIt<NavigationService>().navigatorKey,
-          title: 'Flutter Demo',
+          title: 'Online Marketplace',
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(seedColor: Colors.greenAccent),
+            colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
             useMaterial3: true,
+            // textTheme: GoogleFonts.montserratTextTheme(),
           ),
         ),
       ),

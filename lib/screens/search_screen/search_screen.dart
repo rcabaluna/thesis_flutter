@@ -1,63 +1,74 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:local_marketplace/common/dependency_locator.dart';
 import 'package:local_marketplace/models/product/product.dart';
+import 'package:local_marketplace/models/productbyseller/product_by_seller.dart';
+import 'package:local_marketplace/routes/constants.dart';
+import 'package:local_marketplace/screens/product_detail_screen/product_detail_screen.dart';
+import 'package:local_marketplace/services/common/navigation_service.dart';
 import 'package:local_marketplace/services/product/product.service.dart';
 
 class ProductWidget extends StatelessWidget {
-  final Product product;
+  final ProductBySeller productseller;
 
-  ProductWidget(this.product);
+  ProductWidget(this.productseller);
 
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-
-      },
-      child: Card(
-        elevation: 3,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8.0),
+ @override
+Widget build(BuildContext context) {
+  return GestureDetector(
+    onTap: () {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ProductDetailsScreen(productseller.product.id),
         ),
-        child: Container(
-          height: 250, // Adjusted height to prevent overflow
-          padding: EdgeInsets.all(10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.vertical(top: Radius.circular(6.0)),
-                child: Image.network(
-                  product.imageUrl,
-                  height: 120, // Reduced image height
-                  fit: BoxFit.cover,
-                ),
+      );
+    },
+    child: Card(
+      elevation: 1,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15.0),
+      ),
+      color: Colors.white, // Set the background color to white
+      child: Container(
+        padding: EdgeInsets.all(10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            ClipRRect(
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(11.0)),
+              child: Image.network(
+                productseller.product.imageUrl,
+                height: 110, // Reduced image height
+                fit: BoxFit.cover,
               ),
-              SizedBox(height: 10),
-              Text(
-                product.name,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16, // Slightly reduced font size
-                ),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
+            ),
+            SizedBox(height: 10),
+            Text(
+              productseller.product.name,
+              style: const TextStyle(
+                color: Color(0xFF2B2B2B),
+                fontWeight: FontWeight.bold,
+                fontSize: 16, // Slightly reduced font size
               ),
-              SizedBox(height: 5),
-              Text(
-                '\₱${product.price.toStringAsFixed(2)}/${product.unit}',
-                style: TextStyle(
-                  fontSize: 14, // Slightly reduced font size
-                  color: Color(0xff00AE11),
-                ),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+            SizedBox(height: 5),
+            Text(
+              '\₱${productseller.price.toStringAsFixed(2)}/${productseller.product.unit}',
+              style: const TextStyle(
+                fontSize: 14, // Slightly reduced font size
+                color: Color(0xFF2ECC40),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 
 }
 
@@ -72,44 +83,42 @@ class SearchScreenState extends State<SearchScreen> {
   Timer? _searchTimer;
   ProductService productService = ProductService();
   List<ProductWidget> productWidgets = [];
+  bool isSearching = false;
+  bool showLoader = false;
 
   void performSearch(String query) {
     setState(() {
-      searchPending = true;
-      
+      isSearching = true;
+      showLoader = true;
     });
+    String searchInput = query;
 
-
-    if (_searchTimer != null && _searchTimer!.isActive) {
-      _searchTimer!.cancel();
-    }
-
-    _searchTimer = Timer(Duration(milliseconds: 500), () {
-      setState(() {
-        searchPending = false;
-        isLoading = true;
-      });
-
-      String searchInput = _searchController.text;
+    if(searchInput == ''){
+      productWidgets = [];
+    }else{
       productService.searchProducts(searchInput).then((products) {
         setState(() {
-          isLoading = false;
-          productWidgets = products.map((product) => ProductWidget(product)).toList();
+          isSearching = false;
+          showLoader = false;  
+          if (products.isEmpty) {
+            productWidgets.clear();
+          } else {
+            productWidgets = products.map((product) => ProductWidget(product)).toList();
+          }
         });
       }).catchError((error) {
         setState(() {
-          isLoading = false;
-        });
+            isSearching = false;
+            showLoader = false;
+          });
         print('Error searching products: $error');
       });
+    }
 
-      Future.delayed(Duration(seconds: 2), () {
-        setState(() {
-          isLoading = false;
-        });
-      });
-    });
+      
+    
   }
+
 
   @override
   void dispose() {
@@ -124,7 +133,7 @@ Widget build(BuildContext context) {
     children: [
       SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.only(left: 10, right: 10),
+          padding: const EdgeInsets.only(left: 10, right: 10, top: 15),
           child: Column(
             children: [
               SizedBox(
@@ -135,7 +144,8 @@ Widget build(BuildContext context) {
                     borderRadius: BorderRadius.circular(8.0),
                     color: Colors.grey[200], // Background color for text field
                   ),
-                  padding: EdgeInsets.symmetric(horizontal: 15), // Adjust padding
+                  padding: EdgeInsets.symmetric(horizontal: 15),
+                   // Adjust padding
                   child: Center(
                     child: TextField(
                       controller: _searchController,
@@ -153,7 +163,11 @@ Widget build(BuildContext context) {
               SizedBox(height: 20), // Margin below the text field
               // Display product widgets in a 2x2 grid
               productWidgets.isEmpty
-                  ? Container() // Show an empty container if no products
+                  ? Container(
+                    child: Center(
+                      child: Text('No product(s) found'),
+                    ),
+                  ) // Show an empty container if no products
                   : GridView.count(
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),

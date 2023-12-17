@@ -38,16 +38,12 @@ class ProductNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future getProductsBySeller() async {
-    _productsBySeller = await _productService.getProductsBySeller();
-  }
 
   Future getProducts() async {
-    products = await _productService.getProducts();
+    // products = await _productService.getProducts();
   }
 
   Future init() async {
-    await getProductsBySeller();
     await getProducts();
   }
 }

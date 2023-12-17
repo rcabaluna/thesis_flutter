@@ -59,4 +59,10 @@ class CartNotifier extends ChangeNotifier {
     _cartItems.remove(cart);
     notifyListeners();
   }
+
+  clearCart() {
+    _cartItems.clear();
+    notifyListeners();
+    updateTotalPrice(); // If you want to update the total price after clearing the cart
+  }
 }

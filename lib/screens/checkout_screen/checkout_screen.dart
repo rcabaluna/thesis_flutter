@@ -18,98 +18,115 @@ class CheckoutScreenState extends State<CheckoutScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios
+          ,color: Colors.white,), onPressed: () { Navigator.pop(context); },
+        ),
         title: const Text(
           "Checkout",
-          style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18),
+          style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18, color: Colors.white),
         ),
+        backgroundColor: Colors.green, // Green app bar color
       ),
       body: CustomScrollView(
         slivers: [
           SliverFillRemaining(
-              hasScrollBody: true,
-              child: Column(
-                children: [
-                  Expanded(
-                    child: Consumer<CartNotifier>(
-                      builder: (_, notifier, __) {
-                        return Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Expanded(
-                                flex: 2,
-                                child: _buildProductList(notifier.cartItems)),
-                            // const SizedBox(
-                            //   height: 30,
-                            // ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 20, right: 20),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  const Text(
-                                    "Order Total:",
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w900,
-                                        fontSize: 20),
+            hasScrollBody: true,
+            child: Column(
+              children: [
+                Expanded(
+                  child: Consumer<CartNotifier>(
+                    builder: (_, notifier, __) {
+                      return Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            flex: 2,
+                            child: _buildProductList(notifier.cartItems),
+                          ),
+                          Padding(
+                            padding:
+                                const EdgeInsets.only(left: 20, right: 20),
+                            child: Row(
+                              mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  "Order Total:",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w900,
+                                    fontSize: 20,
                                   ),
-                                  Text(
-                                    "P ${notifier.totalCartPrice}",
-                                    style: const TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w600),
-                                  )
-                                ],
-                              ),
+                                ),
+                                Text(
+                                  "P ${notifier.totalCartPrice}",
+                                  style: const TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                )
+                              ],
                             ),
-                          ],
-                        );
-                      },
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          final CartService cartService = CartService();
+                          List<Map<String, dynamic>> orders = [];
+                          List<Cart> cartItems =
+                              getIt<CartNotifier>().cartItems;
+                          for (var cart in cartItems) {
+                            orders.add({
+                              "quantity": cart.quantity,
+                              "productBySellerId": cart.product.id
+                            });
+                          }
+                          try {
+                            await cartService.order(orders);
+                            if (context.mounted) {
+                              context.loaderOverlay.hide();
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                    "Your order has been placed.",
+                                  ),
+                                ),
+                              );
+                              getIt<NavigationService>().navigateTo( mainScreenRoute, arguments: {},);
+                              getIt<CartNotifier>().clearCart(); // Clear the cart here
+                            }
+                          } catch (e) {
+                            if (context.mounted) {
+                              context.loaderOverlay.hide();
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text("Error ordering"),
+                                ),
+                              );
+                            }
+                          }
+                        },
+                        child: const Text("Place Order"),
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.green,
+                            textStyle: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                      ),
                     ),
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: ElevatedButton(
-                            onPressed: () async {
-                              final CartService cartService = CartService();
-                              List<Map<String, dynamic>> orders = [];
-                              List<Cart> cartItems =
-                                  getIt<CartNotifier>().cartItems;
-                              for (var cart in cartItems) {
-                                orders.add({
-                                  "quantity": cart.quantity,
-                                  "productBySellerId": cart.product.id
-                                });
-                              }
-                              try {
-                                await cartService.order(orders);
-                                if (context.mounted) {
-                                  context.loaderOverlay.hide();
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                          content: Text(
-                                              "Successfully added products")));
-                                  getIt<NavigationService>().navigateTo(
-                                      mainScreenRoute,
-                                      arguments: {});
-                                }
-                              } catch (e) {
-                                if (context.mounted) {
-                                  context.loaderOverlay.hide();
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                          content: Text("Error ordering")));
-                                }
-                              }
-                            },
-                            child: const Text("Place Order")),
-                      )
-                    ],
-                  ),
-                ],
-              ))
+                  ],
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
@@ -117,43 +134,45 @@ class CheckoutScreenState extends State<CheckoutScreen> {
 
   Widget _buildProductList(List<Cart> cartitems) {
     return ListView.builder(
-        itemCount: cartitems.length,
-        itemBuilder: (context, index) {
-          return Container(
-            // margin: const EdgeInsets.all(8.0),
-            padding: const EdgeInsets.all(10.0),
-            child: Row(
-              children: [
-                Container(
-                  height: 100,
-                  width: 100,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: NetworkImage(
-                          cartitems[index].product.imageUrls.first),
+      itemCount: cartitems.length,
+      itemBuilder: (context, index) {
+        return Container(
+          padding: const EdgeInsets.all(10.0),
+          child: Row(
+            children: [
+              Container(
+                height: 100,
+                width: 100,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: NetworkImage(
+                      cartitems[index].product.imageUrls.first,
                     ),
                   ),
                 ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      cartitems[index].product.product.name,
-                      style: const TextStyle(fontWeight: FontWeight.w600),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                            "P ${cartitems[index].product.price.toStringAsFixed(2)}"),
-                        Text(" x ${cartitems[index].quantity}")
-                      ],
-                    )
-                  ],
-                )
-              ],
-            ),
-          );
-        });
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    cartitems[index].product.product.name,
+                    style: const TextStyle(fontWeight: FontWeight.w600),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "P ${cartitems[index].product.price.toStringAsFixed(2)}",
+                      ),
+                      Text(" x ${cartitems[index].quantity}"),
+                    ],
+                  )
+                ],
+              )
+            ],
+          ),
+        );
+      },
+    );
   }
 }

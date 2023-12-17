@@ -37,7 +37,7 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case splashScreenRoute:
       return MaterialPageRoute(builder: (context) => SplashScreen());
     case productDetailRoute:
-      return MaterialPageRoute(builder: (context) => ProductDetailScreen());
+      return MaterialPageRoute(builder: (context) => ProductDetailsScreen("productId"));
     case shopWelcomeRoute:
       return MaterialPageRoute(builder: (context) => ShopWelcomeScreen());
     case shopRegistrationRoute:
