@@ -6,9 +6,10 @@ import 'package:dio/dio.dart';
 
 class NetworkService {
   // final String _baseUrl = "95.111.202.26:3000";
-  final String _baseUrl = "192.168.254.115:3000";
+  final String _baseUrl = "127.0.0.1:3000";
+  // final String _baseUrl = " 192.168.1.64:3000";
   // final String _baseUrl = "192.168.204.234:3000";
-  
+
   late Dio _dio;
   NetworkService() {
     _dio = Dio(_options)..interceptors.add(getIt<AppInterceptor>());
@@ -20,7 +21,6 @@ class NetworkService {
     Map<String, String> headers = {
       HttpHeaders.contentTypeHeader: "application/json",
     };
-
 
     return headers;
   }

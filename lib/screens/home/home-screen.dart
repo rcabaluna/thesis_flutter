@@ -17,7 +17,6 @@ class ProductsListScreen extends StatefulWidget {
 }
 
 class ProductsListScreenState extends State<ProductsListScreen> {
-  
   bool isLoading = false;
   bool searchPending = false;
   ProductService productService = ProductService();
@@ -26,7 +25,6 @@ class ProductsListScreenState extends State<ProductsListScreen> {
   bool showLoader = false;
   String selectedCategoryId = "0";
 
-
   @override
   void initState() {
     super.initState();
@@ -34,58 +32,63 @@ class ProductsListScreenState extends State<ProductsListScreen> {
   }
 
   @override
-Widget build(BuildContext context) {
-  return Container(
-    padding: const EdgeInsets.only(top: 5),
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // First Row
-        const Padding(
-          padding: EdgeInsets.only(left: 20,top: 10),
-          child: Text(
-            "Home",
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25, color: Color(0xFF2B2B2B)),
-          ),
-        ),
-        
-        // Second Row
-        Consumer<CategoryNotifier>(
-          builder: (_, data, __) {
-            return Container(
-              width: MediaQuery.of(context).size.width,
-              height: 80,
-              child: buildCategoryList([Category(name: "All", id: "0"), ...data.categories]),
-            );
-          },
-        ),
-        // Third Row
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0), // Add padding as needed
-            child: Center(
-              child: showLoader
-                  ? const CircularProgressIndicator()
-                  : productWidgets.isEmpty
-                      ? NoProductFound()
-                      : GridView.builder(
-                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2, // 2 columns
-                            crossAxisSpacing: 3.0,
-                            mainAxisSpacing: 3.0,
-                          ),
-                          itemCount: productWidgets.length,
-                          itemBuilder: (_, index) => productWidgets[index],
-                        ),
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.only(top: 5),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // First Row
+          const Padding(
+            padding: EdgeInsets.only(left: 20, top: 10),
+            child: Text(
+              "Home",
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 25,
+                  color: Color(0xFF2B2B2B)),
             ),
           ),
-        ),
-      ],
-    ),
-  );
-}
 
+          // Second Row
+          Consumer<CategoryNotifier>(
+            builder: (_, data, __) {
+              return Container(
+                width: MediaQuery.of(context).size.width,
+                height: 80,
+                child: buildCategoryList(
+                    [Category(name: "All", id: "0"), ...data.categories]),
+              );
+            },
+          ),
+          // Third Row
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                  horizontal: 8.0), // Add padding as needed
+              child: Center(
+                child: showLoader
+                    ? const CircularProgressIndicator()
+                    : productWidgets.isEmpty
+                        ? NoProductFound()
+                        : GridView.builder(
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2, // 2 columns
+                              crossAxisSpacing: 3.0,
+                              mainAxisSpacing: 3.0,
+                            ),
+                            itemCount: productWidgets.length,
+                            itemBuilder: (_, index) => productWidgets[index],
+                          ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
   Widget buildCategoryList(List<Category> categories) {
     return ListView.builder(
@@ -110,8 +113,7 @@ Widget build(BuildContext context) {
     );
   }
 
-  Widget buildCategoryButton(
-      String name, String categoryId, bool isSelected) {
+  Widget buildCategoryButton(String name, String categoryId, bool isSelected) {
     return ElevatedButton(
       onPressed: () {
         setState(() {
@@ -130,7 +132,9 @@ Widget build(BuildContext context) {
         ),
         elevation: MaterialStateProperty.all<double>(isSelected ? 3.0 : 0.0),
         shadowColor: MaterialStateProperty.all<Color>(
-          isSelected ? const Color(0xff00AE11) : const Color.fromARGB(0, 228, 228, 228),
+          isSelected
+              ? const Color(0xff00AE11)
+              : const Color.fromARGB(0, 228, 228, 228),
         ),
       ),
       child: Text(
@@ -166,107 +170,106 @@ Widget build(BuildContext context) {
 
     if (searchInput == "0") {
       productService.getProducts().then((products) {
-      setState(() {
-        isSearching = false;
-        showLoader = false;  
-        if (products.isEmpty) {
-          productWidgets.clear();
-        } else {
-          productWidgets = products.map((product) => ProductWidget(product)).toList();
-        }
-      });
-    }).catchError((error) {
-      setState(() {
-          isSearching = false;
-          showLoader = false;
-        });
-      print('Error searching products: $error');
-    });
-    }else{
-      productService.searchProductsbyCategory(searchInput).then((products) {
         setState(() {
           isSearching = false;
-          showLoader = false;  
+          showLoader = false;
           if (products.isEmpty) {
             productWidgets.clear();
           } else {
-            productWidgets = products.map((product) => ProductWidget(product)).toList();
+            productWidgets =
+                products.map((product) => ProductWidget(product)).toList();
           }
         });
       }).catchError((error) {
         setState(() {
-            isSearching = false;
-            showLoader = false;
-          });
+          isSearching = false;
+          showLoader = false;
+        });
+        print('Error searching products: $error');
+      });
+    } else {
+      productService.searchProductsbyCategory(searchInput).then((products) {
+        setState(() {
+          isSearching = false;
+          showLoader = false;
+          if (products.isEmpty) {
+            productWidgets.clear();
+          } else {
+            productWidgets =
+                products.map((product) => ProductWidget(product)).toList();
+          }
+        });
+      }).catchError((error) {
+        setState(() {
+          isSearching = false;
+          showLoader = false;
+        });
         print('Error searching products: $error');
       });
     }
-    
   }
 }
-
 
 class ProductWidget extends StatelessWidget {
   final ProductBySeller productseller;
 
   ProductWidget(this.productseller);
 
- @override
-Widget build(BuildContext context) {
-  return GestureDetector(
-    onTap: () {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ProductDetailsScreen(productseller.product.id),
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                ProductDetailsScreen(productseller.product.id),
+          ),
+        );
+      },
+      child: Card(
+        elevation: 1,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15.0),
         ),
-      );
-    },
-    child: Card(
-      elevation: 1,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15.0),
-      ),
-      color: Colors.white, // Set the background color to white
-      child: Container(
-        padding: EdgeInsets.all(10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            ClipRRect(
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(11.0)),
-              child: Image.network(
-                productseller.product.imageUrl,
-                height: 110, // Reduced image height
-                fit: BoxFit.cover,
+        color: Colors.white, // Set the background color to white
+        child: Container(
+          padding: EdgeInsets.all(10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              ClipRRect(
+                borderRadius:
+                    const BorderRadius.vertical(top: Radius.circular(11.0)),
+                child: Image.network(
+                  productseller.product.imageUrl,
+                  height: 90, // Reduced image height
+                  fit: BoxFit.cover,
+                ),
               ),
-            ),
-            SizedBox(height: 10),
-            Text(
-              productseller.product.name,
-              style: const TextStyle(
-                color: Color(0xFF2B2B2B),
-                fontWeight: FontWeight.bold,
-                fontSize: 16, // Slightly reduced font size
+              SizedBox(height: 10),
+              Text(
+                productseller.product.name,
+                style: const TextStyle(
+                  color: Color(0xFF2B2B2B),
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14, // Slightly reduced font size
+                ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
               ),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
-            SizedBox(height: 5),
-            Text(
-              '\₱${productseller.price.toStringAsFixed(2)}/${productseller.product.unit}',
-              style: const TextStyle(
-                fontSize: 14, // Slightly reduced font size
-                color: Color(0xFF2ECC40),
+              SizedBox(height: 5),
+              Text(
+                '\₱${productseller.price.toStringAsFixed(2)}/${productseller.product.unit}',
+                style: const TextStyle(
+                  fontSize: 12, // Slightly reduced font size
+                  color: Color(0xFF2ECC40),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
-    ),
-  );
+    );
+  }
 }
-
-}
-
-
