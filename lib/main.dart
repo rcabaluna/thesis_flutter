@@ -1,17 +1,12 @@
-import 'dart:ui';
-
+// ignore_for_file: depend_on_referenced_packages
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:local_marketplace/common/dependency_locator.dart';
-import 'package:local_marketplace/notifiers/product/product_notifier.dart';
 import 'package:local_marketplace/provider_setup.dart';
 import 'package:local_marketplace/routes/constants.dart';
 import 'package:local_marketplace/routes/routes.dart';
 import 'package:local_marketplace/services/common/navigation_service.dart';
 import 'package:provider/provider.dart';
 import 'package:loader_overlay/loader_overlay.dart';
-import 'package:google_fonts/google_fonts.dart';
-
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();

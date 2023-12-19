@@ -33,13 +33,16 @@ class _LoginScreenState extends State<LoginScreen> {
 
       await getIt<AppNotifier>().saveAccessToken(response["accessToken"]);
       await getIt<AppNotifier>().fetchUserDetails();
-      await getIt<AppNotifier>().getMyShop();
+      // await getIt<AppNotifier>().getMyShop();
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: const Text("Successfully Logged In")),
       );
 
-      getIt<NavigationService>().navigatorKey.currentState?.pushNamedAndRemoveUntil(
+      getIt<NavigationService>()
+          .navigatorKey
+          .currentState
+          ?.pushNamedAndRemoveUntil(
             mainScreenRoute,
             (route) => false,
           );
@@ -107,7 +110,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 child: isLoading
-                    ? CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.white))
+                    ? CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white))
                     : Text('Login', style: TextStyle(color: Colors.white)),
               ),
             ),
@@ -118,11 +122,13 @@ class _LoginScreenState extends State<LoginScreen> {
                 Text("Don't have an account?"),
                 TextButton(
                   onPressed: () {
-                    getIt<NavigationService>().navigateTo(registerRoute, arguments: {});
+                    getIt<NavigationService>()
+                        .navigateTo(registerRoute, arguments: {});
                   },
                   child: Text(
                     "Sign Up",
-                    style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                        color: Colors.green, fontWeight: FontWeight.bold),
                   ),
                 ),
               ],

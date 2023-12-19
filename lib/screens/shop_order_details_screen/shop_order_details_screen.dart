@@ -1,13 +1,14 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, non_constant_identifier_names
 
 import 'package:flutter/material.dart';
 import 'package:local_marketplace/common/constants.dart';
 import 'package:local_marketplace/models/orders/order_details_model.dart';
+import 'package:local_marketplace/models/orders/orders_model.dart';
 import 'package:local_marketplace/services/order/order.service.dart';
 
 class ShopOrderDetailsScreen extends StatefulWidget {
   final String orderId;
-
+  dynamic orderSummary;
   ShopOrderDetailsScreen(this.orderId);
 
   ShopOrderDetailsScreenState createState() => ShopOrderDetailsScreenState();
@@ -15,9 +16,12 @@ class ShopOrderDetailsScreen extends StatefulWidget {
 
 class ShopOrderDetailsScreenState extends State<ShopOrderDetailsScreen> {
   OrderDetails? orderDetails;
+  OrderSummary? orderSummary;
+
   void initState() {
     super.initState();
     fetchProductDetails(widget.orderId);
+    getOrderSummary(widget.orderId);
   }
 
   void fetchProductDetails(String orderId) {
@@ -31,6 +35,13 @@ class ShopOrderDetailsScreenState extends State<ShopOrderDetailsScreen> {
     }).catchError((error) {
       print("Error fetching product details: $error");
     });
+  }
+
+  void getOrderSummary(String orderId) {
+    String orderIdx = orderId;
+    OrderService orderService = OrderService();
+
+    orderService.getOrderSummary(orderIdx);
   }
 
   bool isExpanded = false;
@@ -75,10 +86,6 @@ class ShopOrderDetailsScreenState extends State<ShopOrderDetailsScreen> {
               SizedBox(
                 height: 10,
               ),
-              buildNoteContainer(),
-              SizedBox(
-                height: 30,
-              ),
               buildActionButtons(),
             ],
           ),
@@ -94,7 +101,7 @@ class ShopOrderDetailsScreenState extends State<ShopOrderDetailsScreen> {
         children: [
           Center(
               child: Text(
-            'Order ID: 34T3T2456YW246',
+            'Order ID: ${widget.orderId}',
             style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800),
           )),
           Center(
@@ -176,7 +183,46 @@ class ShopOrderDetailsScreenState extends State<ShopOrderDetailsScreen> {
                 )
               ],
             ),
-          )
+          ),
+          SizedBox(height: 10),
+          Padding(
+            padding: EdgeInsets.all(0),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.notes_outlined,
+                  size: 15,
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                Text(
+                  "Notes",
+                  style: TextStyle(fontSize: 13),
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.all(0),
+            child: Row(
+              children: [
+                SizedBox(
+                  width: 25,
+                ),
+                Text(
+                  "Atbang sa Gram",
+                  style: TextStyle(fontSize: 13, fontStyle: FontStyle.italic),
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
@@ -245,87 +291,12 @@ class ShopOrderDetailsScreenState extends State<ShopOrderDetailsScreen> {
     );
   }
 
-  Widget buildNoteContainer() {
-    return Container(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "Note:",
-            style: TextStyle(fontWeight: FontWeight.w600),
-          ),
-          GestureDetector(
-            onTap: () {
-              setState(() {
-                isExpanded = !isExpanded;
-              });
-            },
-            child: Text(
-              "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s ",
-              maxLines: isExpanded ? null : 3,
-              overflow:
-                  isExpanded ? TextOverflow.visible : TextOverflow.ellipsis,
-              style: TextStyle(fontSize: 11),
-            ),
-          ),
-          SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "Order Date:",
-                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
-              ),
-              Text("Oct 5, 2023",
-                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13))
-            ],
-          ),
-          SizedBox(
-            height: 15,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "Total:",
-                style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    color: Colors.green,
-                    fontSize: 18),
-              ),
-              Text(
-                "P 1023.00",
-                style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    color: Colors.green,
-                    fontSize: 18),
-              )
-            ],
-          )
-        ],
-      ),
-    );
-  }
-
   // Widget to build the UI with accept and reject functionalities
   Widget buildActionButtons() {
     return Container(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            "Note:",
-            style: TextStyle(fontWeight: FontWeight.w600),
-          ),
-          GestureDetector(
-            onTap: () {
-              // Toggle expansion logic
-              setState(() {
-                isExpanded = !isExpanded;
-              });
-            },
-            child: Text('Tap to expand'), // Placeholder for expanding action
-          ),
           SizedBox(height: 20), // Adding space between text and buttons
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -365,11 +336,6 @@ class ShopOrderDetailsScreenState extends State<ShopOrderDetailsScreen> {
     );
   }
 
-  void AcceptOrder(String orderId) {
-    OrderService orderService = OrderService();
-    orderService.acceptOrder(orderId);
-  }
-
 // Function to show a dialog for entering the reason for rejection
   void showRejectionDialog(BuildContext context) {
     String rejectionReason = ''; // Variable to store the rejection reason
@@ -400,5 +366,10 @@ class ShopOrderDetailsScreenState extends State<ShopOrderDetailsScreen> {
         );
       },
     );
+  }
+
+  void AcceptOrder(String orderId) {
+    OrderService orderService = OrderService();
+    orderService.acceptOrder(orderId).then((_) {});
   }
 }
