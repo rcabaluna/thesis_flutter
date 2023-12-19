@@ -242,7 +242,7 @@ class ProductWidget extends StatelessWidget {
                 borderRadius:
                     const BorderRadius.vertical(top: Radius.circular(11.0)),
                 child: Image.network(
-                  productseller.product.imageUrl,
+                  productseller.imageUrls.first,
                   height: 90, // Reduced image height
                   fit: BoxFit.cover,
                 ),

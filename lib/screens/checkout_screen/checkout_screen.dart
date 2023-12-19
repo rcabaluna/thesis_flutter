@@ -48,16 +48,6 @@ class CheckoutScreenState extends State<CheckoutScreen> {
             hasScrollBody: true,
             child: Column(
               children: [
-                Padding(
-                  padding: EdgeInsets.all(8.0), // Adjust the value as needed
-                  child: Text(
-                    'Order Details',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w800,
-                      fontSize: 25,
-                    ),
-                  ),
-                ),
                 Expanded(
                   child: Consumer<CartNotifier>(
                     builder: (_, notifier, __) {
