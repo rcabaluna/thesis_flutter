@@ -15,6 +15,8 @@ import 'package:local_marketplace/routes/constants.dart';
 import 'package:local_marketplace/services/common/navigation_service.dart';
 
 class OrderDetailScreen extends StatefulWidget {
+  OrderDetailScreen(String s);
+
   OrderDetailScreenState createState() => OrderDetailScreenState();
 }
 

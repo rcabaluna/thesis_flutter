@@ -109,19 +109,7 @@ class ShopProfileScreenState extends State<ShopProfileScreen> {
               SizedBox(
                 height: 10,
               ),
-              buildDirectory("Ordered History", () {}),
-              SizedBox(
-                height: 10,
-              ),
-              buildDirectory("Shop Rating", () {}),
-              SizedBox(
-                height: 10,
-              ),
               buildDirectory("Shop Performance", () {}),
-              SizedBox(
-                height: 10,
-              ),
-              buildDirectory("Edit Profile", () {}),
             ],
           ),
         ),

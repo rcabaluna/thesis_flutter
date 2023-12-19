@@ -59,7 +59,8 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case myOrderRoute:
       return MaterialPageRoute(builder: (context) => MyOrderScreen());
     case orderDetailsRoute:
-      return MaterialPageRoute(builder: (context) => OrderDetailScreen());
+      return MaterialPageRoute(
+          builder: (context) => OrderDetailScreen("orderId"));
     case editProfileRoute:
       return MaterialPageRoute(builder: (context) => EditProfileScreen());
     case myRatingRoute:

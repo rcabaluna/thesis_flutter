@@ -140,12 +140,12 @@ class OrdersWidget extends StatelessWidget {
                   ),
                   SizedBox(height: 5),
 
-                  Row(
+                  const Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       // Price
                       Text(
-                        ordersummary.status,
+                        'test',
                         style: TextStyle(
                           fontSize: 16,
                           color: Colors.green,

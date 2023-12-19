@@ -3,26 +3,64 @@
 import 'package:flutter/material.dart';
 import 'package:local_marketplace/common/constants.dart';
 import 'package:local_marketplace/common/dependency_locator.dart';
+import 'package:local_marketplace/models/orders/order_details_model.dart';
 import 'package:local_marketplace/routes/constants.dart';
 import 'package:local_marketplace/services/common/navigation_service.dart';
+import 'package:local_marketplace/services/order/order.service.dart';
 
 class OrderDetailScreen extends StatefulWidget {
+  final String orderId;
+
+  OrderDetailScreen(this.orderId);
+
   OrderDetailScreenState createState() => OrderDetailScreenState();
 }
 
 class OrderDetailScreenState extends State<OrderDetailScreen> {
+  OrderDetails? orderDetails;
+  String xstatus = "Accepted";
+  void initState() {
+    super.initState();
+    fetchProductDetails(widget.orderId);
+  }
+
+  void fetchProductDetails(String orderId) {
+    String orderIdx = orderId;
+    OrderService orderService = OrderService();
+
+    orderService
+        .getShopOrderDetails(orderIdx)
+        .then((List<OrderDetails> orderDetailsList) {
+      orderDetails = orderDetailsList.first;
+    }).catchError((error) {
+      print("Error fetching product details: $error");
+    });
+  }
+
   bool isExpanded = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Order Details"),
+        iconTheme: IconThemeData(
+          color: Colors.white, //change your color here
+        ),
         leading: IconButton(
-            onPressed: () {
-              getIt<NavigationService>()
-                  .navigateTo(orderHistoryRoute, arguments: {});
-            },
-            icon: Icon(Icons.arrow_back)),
+          icon: Icon(
+            Icons.arrow_back_ios,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        title: const Text(
+          "Order Details",
+          style: TextStyle(
+              fontWeight: FontWeight.w800, fontSize: 18, color: Colors.white),
+        ),
+        backgroundColor: Colors.green, // Green app bar color
+        elevation: 2, // Adding elevation for a subtle shadow
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -41,7 +79,7 @@ class OrderDetailScreenState extends State<OrderDetailScreen> {
               SizedBox(
                 height: 10,
               ),
-              buildNoteContainer(),
+              buildActionButtons(xstatus),
             ],
           ),
         ),
@@ -54,18 +92,32 @@ class OrderDetailScreenState extends State<OrderDetailScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Center(
+              child: Text(
+            'Order ID: 34T3T2456YW246',
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800),
+          )),
+          Center(
+            child: Text('Ordered on 2023-12-18 08:23:12',
+                style: TextStyle(fontSize: 10, color: Colors.grey)),
+          ),
+          SizedBox(
+            height: 18,
+          ),
           Text(
             "Meet Up to or Delivery to",
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+            style: TextStyle(
+              fontSize: 13,
+            ),
           ),
           Padding(
-            padding: EdgeInsets.all(10),
+            padding: EdgeInsets.only(top: 10.0),
             child: Row(
               children: [
                 Icon(
                   Icons.location_on,
                   color: Colors.red,
-                  size: 25,
+                  size: 15,
                 ),
                 SizedBox(
                   width: 10,
@@ -90,12 +142,12 @@ class OrderDetailScreenState extends State<OrderDetailScreen> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.all(10),
+            padding: EdgeInsets.all(0),
             child: Row(
               children: [
                 Icon(
                   Icons.person,
-                  size: 25,
+                  size: 15,
                 ),
                 SizedBox(
                   width: 10,
@@ -108,12 +160,12 @@ class OrderDetailScreenState extends State<OrderDetailScreen> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.all(10),
+            padding: EdgeInsets.all(0),
             child: Row(
               children: [
                 Icon(
                   Icons.phone,
-                  size: 25,
+                  size: 15,
                 ),
                 SizedBox(
                   width: 10,
@@ -124,7 +176,46 @@ class OrderDetailScreenState extends State<OrderDetailScreen> {
                 )
               ],
             ),
-          )
+          ),
+          SizedBox(height: 10),
+          Padding(
+            padding: EdgeInsets.all(0),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.notes_outlined,
+                  size: 15,
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                Text(
+                  "Notes",
+                  style: TextStyle(fontSize: 13),
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.all(0),
+            child: Row(
+              children: [
+                SizedBox(
+                  width: 25,
+                ),
+                Text(
+                  "Atbang sa Gram",
+                  style: TextStyle(fontSize: 13, fontStyle: FontStyle.italic),
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
@@ -132,22 +223,10 @@ class OrderDetailScreenState extends State<OrderDetailScreen> {
 
   Widget buildMeetUpContainerDate() {
     return Container(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Text(
-            "Meet Up Time",
-            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 11),
-          ),
-          Text(
-            "10:30 AM",
-            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 11),
-          ),
-          Text(
-            "Oct 5, 2023",
-            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 11),
-          )
-        ],
+      child: Divider(
+        color: Colors.black, // Change the color of the divider line
+        thickness: 0.1, // Set the thickness of the divider line
+        height: 20, // Set the vertical space above the divider
       ),
     );
   }
@@ -156,18 +235,6 @@ class OrderDetailScreenState extends State<OrderDetailScreen> {
     return Container(
       child: Column(
         children: [
-          Row(
-            children: [
-              Icon(
-                Icons.store,
-                size: 30,
-              ),
-              SizedBox(
-                width: 10,
-              ),
-              Text("Store Name")
-            ],
-          ),
           Row(
             children: [
               Container(
@@ -217,65 +284,38 @@ class OrderDetailScreenState extends State<OrderDetailScreen> {
     );
   }
 
-  Widget buildNoteContainer() {
+  Widget buildActionButtons(String xstatus) {
+    bool isAccepted = xstatus == "Accepted";
+
     return Container(
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          Text(
-            "Note:",
-            style: TextStyle(fontWeight: FontWeight.w600),
-          ),
-          GestureDetector(
-            onTap: () {
-              setState(() {
-                isExpanded = !isExpanded;
-              });
-            },
+          ElevatedButton(
+            onPressed: isAccepted
+                ? () {
+                    ReceivedOrder(widget.orderId);
+                  }
+                : null,
+            style: ElevatedButton.styleFrom(
+              primary: isAccepted
+                  ? Colors.green
+                  : Colors
+                      .grey, // Set the background color to green if accepted, grey if not
+            ),
             child: Text(
-              "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s ",
-              maxLines: isExpanded ? null : 3,
-              overflow:
-                  isExpanded ? TextOverflow.visible : TextOverflow.ellipsis,
-              style: TextStyle(fontSize: 11),
+              'Order Received',
+              style: TextStyle(color: Colors.white),
             ),
           ),
-          SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "Order Date:",
-                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
-              ),
-              Text("Oct 5, 2023",
-                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13))
-            ],
-          ),
-          SizedBox(
-            height: 15,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "Total:",
-                style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    color: Colors.green,
-                    fontSize: 18),
-              ),
-              Text(
-                "P 1023.00",
-                style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    color: Colors.green,
-                    fontSize: 18),
-              )
-            ],
-          )
         ],
       ),
     );
+  }
+
+  void ReceivedOrder(String orderId) {
+    OrderService orderService = OrderService();
+    orderService.receiveOrder(orderId).then((_) {});
   }
 }

@@ -3,6 +3,7 @@ class OrderDetails {
   final String orderId;
   final int quantity;
   final int total;
+  final String status;
   final String createdAt;
   final String updatedAt;
 
@@ -11,6 +12,7 @@ class OrderDetails {
     required this.orderId,
     required this.quantity,
     required this.total,
+    required this.status,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -21,6 +23,7 @@ class OrderDetails {
       orderId: json['orderId'],
       quantity: json['quantity'],
       total: json['total'].toDouble(),
+      status: json['status'],
       createdAt: json['createdAt'],
       updatedAt: json['updatedAt'],
     );

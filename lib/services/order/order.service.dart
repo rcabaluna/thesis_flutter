@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:local_marketplace/common/core/network/endpoint.dart';
 import 'package:local_marketplace/common/core/network/index.dart';
 import 'package:local_marketplace/models/orders/order_details_model.dart';
+import 'package:local_marketplace/models/orders/orders_model.dart';
 import 'package:local_marketplace/models/product/product.dart';
 import 'package:local_marketplace/models/shop/shop_orders_model.dart';
 import 'package:local_marketplace/models/customer/customer_details.dart';
@@ -19,7 +20,6 @@ class OrderService {
         print(json);
         return ShopOrders(
             orderId: json['_id'],
-            status: json['status'],
             deliveryType: json['deliveryType'],
             address: json['address'],
             notes: json['notes']);
@@ -43,6 +43,7 @@ class OrderService {
             id: json['_id'],
             orderId: json['orderId'],
             quantity: json['quantity'],
+            status: json['status'],
             total: json['total'],
             createdAt: json['createdAt'],
             updatedAt: json['updatedAt']);
@@ -52,8 +53,31 @@ class OrderService {
     }
   }
 
-  Future<List<ShopOrders>> acceptOrder(String orderShopId) async {
-    final url = "$ORDER_URL/accept-order/$orderShopId";
+  Future<bool> acceptOrder(String orderId) async {
+    final url = "$ORDER_URL/accept-order/$orderId";
+
+    try {
+      final result = await _networkService.putRequest(url);
+      return true;
+    } on DioException catch (e) {
+      return false;
+    }
+  }
+
+  Future<bool> receiveOrder(String orderId) async {
+    final url = "$ORDER_URL/receive-order/$orderId";
+
+    try {
+      final result = await _networkService.putRequest(url);
+      return true;
+    } on DioException catch (e) {
+      return false;
+    }
+  }
+
+  // MY ORDERS
+  Future<List<ShopOrders>> getMyOrders() async {
+    final url = "$ORDER_URL/my-orders";
     try {
       final result = await _networkService.getRequest(url);
       List<Map<String, dynamic>> data = List<Map<String, dynamic>>.from(result);
@@ -61,7 +85,6 @@ class OrderService {
         print(json);
         return ShopOrders(
             orderId: json['_id'],
-            status: json['status'],
             deliveryType: json['deliveryType'],
             address: json['address'],
             notes: json['notes']);
@@ -69,6 +92,36 @@ class OrderService {
     } on DioException catch (e) {
       print(e);
       return [];
+    }
+  }
+
+  // Future<List<OrderSummary>> getOrderSummary(String orderIdx) async {
+  //   final url = "$ORDER_URL/get-order-summary/$orderIdx";
+  //   try {
+  //     final result = await _networkService.getRequest(url);
+
+  //     List<Map<String, dynamic>> data = List<Map<String, dynamic>>.from(result);
+  //     return data.map((json) {
+  //       print(json);
+  //       return OrderSummary(
+  //           deliveryType: json['deliveryType'],
+  //           address: json['address'],
+  //           notes: json['notes'],
+  //           user: json['user']);
+  //     }).toList();
+  //   } on DioException catch (e) {
+  //     print(e);
+  //     return [];
+  //   }
+  // }
+
+  Future<dynamic> getOrderSummary(String orderIdx) async {
+    final url = "$ORDER_URL/get-order-summary/$orderIdx";
+    try {
+      final result = await _networkService.getRequest(url);
+      return result;
+    } on DioException catch (e) {
+      throw false;
     }
   }
 }
