@@ -16,6 +16,7 @@ class OrderService {
       final result = await _networkService.getRequest(ORDER_URL);
       List<Map<String, dynamic>> data = List<Map<String, dynamic>>.from(result);
       return data.map((json) {
+        print(json);
         return ShopOrders(
             orderId: json['_id'],
             status: json['status'],
@@ -51,15 +52,23 @@ class OrderService {
     }
   }
 
-  Future<String> acceptOrder(String orderShopId) async {
+  Future<List<ShopOrders>> acceptOrder(String orderShopId) async {
     final url = "$ORDER_URL/accept-order/$orderShopId";
-
     try {
       final result = await _networkService.getRequest(url);
-
-      return result;
+      List<Map<String, dynamic>> data = List<Map<String, dynamic>>.from(result);
+      return data.map((json) {
+        print(json);
+        return ShopOrders(
+            orderId: json['_id'],
+            status: json['status'],
+            deliveryType: json['deliveryType'],
+            address: json['address'],
+            notes: json['notes']);
+      }).toList();
     } on DioException catch (e) {
-      return 'error';
+      print(e);
+      return [];
     }
   }
 }

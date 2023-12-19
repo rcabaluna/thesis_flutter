@@ -17,12 +17,18 @@ class _CartScreenState extends State<CartScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios
-          ,color: Colors.white,), onPressed: () { Navigator.pop(context); },
+          icon: Icon(
+            Icons.arrow_back_ios,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
         title: const Text(
           "My Cart",
-          style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18, color: Colors.white),
+          style: TextStyle(
+              fontWeight: FontWeight.w800, fontSize: 18, color: Colors.white),
         ),
         backgroundColor: Colors.green, // Green app bar color
       ),
@@ -38,7 +44,7 @@ class _CartScreenState extends State<CartScreen> {
                   ElevatedButton(
                     onPressed: () {
                       getIt<NavigationService>()
-                              .navigateTo(mainScreenRoute, arguments: {});
+                          .navigateTo(mainScreenRoute, arguments: {});
                     },
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
@@ -61,8 +67,8 @@ class _CartScreenState extends State<CartScreen> {
                     itemCount: cartNotifier.cartLength,
                     itemBuilder: (context, index) {
                       return Dismissible(
-                        key: Key(
-                            cartNotifier.cartItems[index].product.id.toString()),
+                        key: Key(cartNotifier.cartItems[index].product.id
+                            .toString()),
                         onDismissed: (direction) {
                           cartNotifier
                               .removeCartItem(cartNotifier.cartItems[index]);
@@ -132,108 +138,107 @@ class _CartScreenState extends State<CartScreen> {
   }
 
   Widget buildCartItem(
-  Cart cart,
-  CartNotifier cartNotifier,
-) {
-  return Padding(
-    padding: const EdgeInsets.all(16.0),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            SizedBox(width: 8),
-            Text(
-              'Shop Name: ' + cart.product.seller.shopName,
-              style: TextStyle(fontSize: 13),
-            ),
-          ],
-        ),
-        SizedBox(height: 8),
-        Container(
-          child: SizedBox(
-            height: 120, // Adjusting the height of the Card
-            child: Card(
-              elevation: 2,
-              margin: EdgeInsets.all(0.0),
-              child: Row(
-                children: [
-                  Checkbox(
-                    value: cart.includeInTotal,
-                    onChanged: (value) {
-                      setState(() {
-                        cart.includeInTotal = value ?? false;
-                        cartNotifier.updateTotalPrice();
-                      });
-                    },
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Image.network(
-                      cart.product.imageUrls.first,
-                      fit: BoxFit.cover,
-                      height: 100,
-                      width: 100,
+    Cart cart,
+    CartNotifier cartNotifier,
+  ) {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              SizedBox(width: 8),
+              Text(
+                'Shop Name: ' + cart.product.seller.shopName,
+                style: TextStyle(fontSize: 13),
+              ),
+            ],
+          ),
+          SizedBox(height: 8),
+          Container(
+            child: SizedBox(
+              height: 120, // Adjusting the height of the Card
+              child: Card(
+                elevation: 2,
+                margin: EdgeInsets.all(0.0),
+                child: Row(
+                  children: [
+                    Checkbox(
+                      value: cart.includeInTotal,
+                      onChanged: (value) {
+                        setState(() {
+                          cart.includeInTotal = value ?? false;
+                          cartNotifier.updateTotalPrice();
+                        });
+                      },
                     ),
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            cart.product.product.name,
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          Text(
-                            "₱${cart.product.product.price.toStringAsFixed(2)}",
-                            style: TextStyle(fontSize: 12),
-                          ),
-                          SizedBox(height: 8),
-                          Row(
-                            children: [
-                              IconButton(
-                                icon: Icon(Icons.remove),
-                                onPressed: () {
-                                  if (cart.quantity > 1) {
-                                    cartNotifier.updateCartItemQuantity(
-                                      cart,
-                                      cart.quantity - 1,
-                                    );
-                                    cartNotifier.updateTotalPrice();
-                                  }
-                                },
-                              ),
-                              Text(
-                                cart.quantity.toString(),
-                                style: TextStyle(fontSize: 16),
-                              ),
-                              IconButton(
-                                icon: Icon(Icons.add),
-                                onPressed: () {
-                                  cartNotifier.updateCartItemQuantity(
-                                    cart,
-                                    cart.quantity + 1,
-                                  );
-                                  cartNotifier.updateTotalPrice();
-                                },
-                              ),
-                            ],
-                          ),
-                        ],
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Image.network(
+                        cart.product.imageUrls.first,
+                        fit: BoxFit.cover,
+                        height: 100,
+                        width: 100,
                       ),
                     ),
-                  ),
-                ],
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              cart.product.product.name,
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            Text(
+                              "₱${cart.product.product.price.toStringAsFixed(2)}",
+                              style: TextStyle(fontSize: 12),
+                            ),
+                            SizedBox(height: 8),
+                            Row(
+                              children: [
+                                IconButton(
+                                  icon: Icon(Icons.remove),
+                                  onPressed: () {
+                                    if (cart.quantity > 1) {
+                                      cartNotifier.updateCartItemQuantity(
+                                        cart,
+                                        cart.quantity - 1,
+                                      );
+                                      cartNotifier.updateTotalPrice();
+                                    }
+                                  },
+                                ),
+                                Text(
+                                  cart.quantity.toString(),
+                                  style: TextStyle(fontSize: 16),
+                                ),
+                                IconButton(
+                                  icon: Icon(Icons.add),
+                                  onPressed: () {
+                                    cartNotifier.updateCartItemQuantity(
+                                      cart,
+                                      cart.quantity + 1,
+                                    );
+                                    cartNotifier.updateTotalPrice();
+                                  },
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
-        ),
-      ],
-    ),
-  );
-}
-
+        ],
+      ),
+    );
+  }
 }

@@ -308,7 +308,6 @@ class ShopOrderDetailsScreenState extends State<ShopOrderDetailsScreen> {
   }
 
   // Widget to build the UI with accept and reject functionalities
-  // Widget to build the UI with accept and reject functionalities
   Widget buildActionButtons() {
     return Container(
       child: Column(
@@ -333,8 +332,7 @@ class ShopOrderDetailsScreenState extends State<ShopOrderDetailsScreen> {
             children: [
               ElevatedButton(
                 onPressed: () {
-                  // Add functionality for accept action
-                  // For example, you can have a function like acceptOrder()
+                  AcceptOrder(widget.orderId);
                 },
                 style: ElevatedButton.styleFrom(
                   primary: Colors.green, // Set the background color to green

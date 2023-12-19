@@ -102,9 +102,11 @@ class CheckoutScreenState extends State<CheckoutScreen> {
                                 if (deliveryOption == 'Meet-Up') {
                                   isMeetUp = true;
                                   isDelivery = false;
+                                  deliveryOption = 'Meet-Up';
                                 } else if (deliveryOption == 'Delivery') {
                                   isDelivery = true;
                                   isMeetUp = false;
+                                  deliveryOption = 'Delivery';
                                 }
                               });
                             },
@@ -167,10 +169,6 @@ class CheckoutScreenState extends State<CheckoutScreen> {
                               address: address.text,
                               notes: notes.text,
                             );
-
-                            // Convert PlaceOrder object to JSON
-                            Map<String, dynamic> orderJson =
-                                orderSummary.toJson();
 
                             try {
                               await cartService.order(orderSummary, orders);
