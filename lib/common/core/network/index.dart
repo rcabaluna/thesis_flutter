@@ -8,7 +8,7 @@ class NetworkService {
   // final String _baseUrl = "95.111.202.26:3000";
   final String _baseUrl = "192.168.254.115:3000";
   // final String _baseUrl = "192.168.204.234:3000";
-  
+
   late Dio _dio;
   NetworkService() {
     _dio = Dio(_options)..interceptors.add(getIt<AppInterceptor>());
@@ -20,7 +20,6 @@ class NetworkService {
     Map<String, String> headers = {
       HttpHeaders.contentTypeHeader: "application/json",
     };
-
 
     return headers;
   }

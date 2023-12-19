@@ -145,10 +145,13 @@ class AppNotifier extends ChangeNotifier {
   }
 
   Future getMyShop() async {
+    
     try {
       final result = await _shopService.getMySellerDetails();
       myShop = Seller.fromJson(result);
-    } catch (e) {}
+    } catch (e) {
+      print(e);
+    }
   }
 
   List<ProductBySeller> _myLiveProducts = [];

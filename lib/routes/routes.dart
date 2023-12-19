@@ -15,7 +15,6 @@ import 'package:local_marketplace/screens/my_order_screen/my_order_screen.dart';
 import 'package:local_marketplace/screens/my_ratings_screen/my_ratings_screen.dart';
 import 'package:local_marketplace/screens/order_history_screen/order_history_screen.dart';
 import 'package:local_marketplace/screens/product_detail_screen/product_detail_screen.dart';
-import 'package:local_marketplace/screens/profile_screen/profile_screen.dart';
 import 'package:local_marketplace/screens/rate_order_screen/rate_order_screen.dart';
 import 'package:local_marketplace/screens/registration_fee_screen/registration_review.dart';
 import 'package:local_marketplace/screens/registration_fee_screen/shop_registration_fee.dart';
@@ -25,8 +24,9 @@ import 'package:local_marketplace/screens/shop_product_screen/shop_product.dart'
 import 'package:local_marketplace/screens/shop_profile/shop_profile.dart';
 import 'package:local_marketplace/screens/shop_registration_screen/shop_registration.dart';
 import 'package:local_marketplace/screens/shop_welcome_screen/shop_welcome_screen.dart';
+import 'package:local_marketplace/screens/auth/logout_screen.dart';
+
 import 'package:local_marketplace/screens/splash_screen.dart';
-import 'package:local_marketplace/services/common/navigation_service.dart';
 
 Route<dynamic> generateRoute(RouteSettings settings) {
   switch (settings.name) {
@@ -37,7 +37,8 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case splashScreenRoute:
       return MaterialPageRoute(builder: (context) => SplashScreen());
     case productDetailRoute:
-      return MaterialPageRoute(builder: (context) => ProductDetailsScreen("productId"));
+      return MaterialPageRoute(
+          builder: (context) => ProductDetailsScreen("productId"));
     case shopWelcomeRoute:
       return MaterialPageRoute(builder: (context) => ShopWelcomeScreen());
     case shopRegistrationRoute:
@@ -51,7 +52,8 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case shopProfileRoute:
       return MaterialPageRoute(builder: (context) => ShopProfileScreen());
     case shopOrderDetailsRoute:
-      return MaterialPageRoute(builder: (context) => ShopOrderDetailsScreen());
+      return MaterialPageRoute(
+          builder: (context) => ShopOrderDetailsScreen("orderId"));
     case orderHistoryRoute:
       return MaterialPageRoute(builder: (context) => OrderHistortyScreen());
     case myOrderRoute:
@@ -82,6 +84,8 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       } else {
         return MaterialPageRoute(builder: (context) => LoginScreen());
       }
+    case logoutRoute:
+      return MaterialPageRoute(builder: (context) => LogoutScreen());
 
     default:
       return MaterialPageRoute(

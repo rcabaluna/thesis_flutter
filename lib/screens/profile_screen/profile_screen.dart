@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -59,11 +60,13 @@ class ProfileScreenState extends State<ProfileScreen> {
           _buildDirectory("My Orders", myOrderRoute),
           _buildDirectory("Order History", orderHistoryRoute),
           _buildDirectory("My Ratings", myRatingRoute),
-          _buildDirectory("My Shop", getIt<AppNotifier>().myShop != null
-              ? shopProfileRoute
-              : shopWelcomeRoute),
+          _buildDirectory(
+              "My Shop",
+              getIt<AppNotifier>().myShop != null
+                  ? registrationFeeRoute
+                  : shopProfileRoute),
           _buildDirectory("Edit Profile", editProfileRoute),
-          _buildDirectory("Logout", editProfileRoute),
+          _buildDirectory("Logout", logoutRoute),
         ],
       ),
     );

@@ -2,27 +2,61 @@
 
 import 'package:flutter/material.dart';
 import 'package:local_marketplace/common/constants.dart';
-import 'package:local_marketplace/common/dependency_locator.dart';
-import 'package:local_marketplace/routes/constants.dart';
-import 'package:local_marketplace/services/common/navigation_service.dart';
+import 'package:local_marketplace/models/orders/order_details_model.dart';
+import 'package:local_marketplace/services/order/order.service.dart';
 
 class ShopOrderDetailsScreen extends StatefulWidget {
+  final String orderId;
+
+  ShopOrderDetailsScreen(this.orderId);
+
   ShopOrderDetailsScreenState createState() => ShopOrderDetailsScreenState();
 }
 
 class ShopOrderDetailsScreenState extends State<ShopOrderDetailsScreen> {
+  OrderDetails? orderDetails;
+  void initState() {
+    super.initState();
+    fetchProductDetails(widget.orderId);
+  }
+
+  void fetchProductDetails(String orderId) {
+    String orderIdx = orderId;
+    OrderService orderService = OrderService();
+
+    orderService
+        .getShopOrderDetails(orderIdx)
+        .then((List<OrderDetails> orderDetailsList) {
+      orderDetails = orderDetailsList.first;
+    }).catchError((error) {
+      print("Error fetching product details: $error");
+    });
+  }
+
   bool isExpanded = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Order Details"),
+        iconTheme: IconThemeData(
+          color: Colors.white, //change your color here
+        ),
         leading: IconButton(
-            onPressed: () {
-              getIt<NavigationService>()
-                  .navigateTo(shopPendingOrderRoute, arguments: {});
-            },
-            icon: Icon(Icons.arrow_back)),
+          icon: Icon(
+            Icons.arrow_back_ios,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        title: const Text(
+          "Order Details",
+          style: TextStyle(
+              fontWeight: FontWeight.w800, fontSize: 18, color: Colors.white),
+        ),
+        backgroundColor: Colors.green, // Green app bar color
+        elevation: 2, // Adding elevation for a subtle shadow
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -42,6 +76,10 @@ class ShopOrderDetailsScreenState extends State<ShopOrderDetailsScreen> {
                 height: 10,
               ),
               buildNoteContainer(),
+              SizedBox(
+                height: 30,
+              ),
+              buildActionButtons(),
             ],
           ),
         ),
@@ -54,18 +92,32 @@ class ShopOrderDetailsScreenState extends State<ShopOrderDetailsScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Center(
+              child: Text(
+            'Order ID: 34T3T2456YW246',
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800),
+          )),
+          Center(
+            child: Text('Ordered on 2023-12-18 08:23:12',
+                style: TextStyle(fontSize: 10, color: Colors.grey)),
+          ),
+          SizedBox(
+            height: 18,
+          ),
           Text(
             "Meet Up to or Delivery to",
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+            style: TextStyle(
+              fontSize: 13,
+            ),
           ),
           Padding(
-            padding: EdgeInsets.all(10),
+            padding: EdgeInsets.only(top: 10.0),
             child: Row(
               children: [
                 Icon(
                   Icons.location_on,
                   color: Colors.red,
-                  size: 25,
+                  size: 15,
                 ),
                 SizedBox(
                   width: 10,
@@ -90,12 +142,12 @@ class ShopOrderDetailsScreenState extends State<ShopOrderDetailsScreen> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.all(10),
+            padding: EdgeInsets.all(0),
             child: Row(
               children: [
                 Icon(
                   Icons.person,
-                  size: 25,
+                  size: 15,
                 ),
                 SizedBox(
                   width: 10,
@@ -108,12 +160,12 @@ class ShopOrderDetailsScreenState extends State<ShopOrderDetailsScreen> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.all(10),
+            padding: EdgeInsets.all(0),
             child: Row(
               children: [
                 Icon(
                   Icons.phone,
-                  size: 25,
+                  size: 15,
                 ),
                 SizedBox(
                   width: 10,
@@ -132,22 +184,10 @@ class ShopOrderDetailsScreenState extends State<ShopOrderDetailsScreen> {
 
   Widget buildMeetUpContainerDate() {
     return Container(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Text(
-            "Meet Up Time",
-            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 11),
-          ),
-          Text(
-            "10:30 AM",
-            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 11),
-          ),
-          Text(
-            "Oct 5, 2023",
-            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 11),
-          )
-        ],
+      child: Divider(
+        color: Colors.black, // Change the color of the divider line
+        thickness: 0.1, // Set the thickness of the divider line
+        height: 20, // Set the vertical space above the divider
       ),
     );
   }
@@ -156,18 +196,6 @@ class ShopOrderDetailsScreenState extends State<ShopOrderDetailsScreen> {
     return Container(
       child: Column(
         children: [
-          Row(
-            children: [
-              Icon(
-                Icons.store,
-                size: 30,
-              ),
-              SizedBox(
-                width: 10,
-              ),
-              Text("Store Name")
-            ],
-          ),
           Row(
             children: [
               Container(
@@ -276,6 +304,103 @@ class ShopOrderDetailsScreenState extends State<ShopOrderDetailsScreen> {
           )
         ],
       ),
+    );
+  }
+
+  // Widget to build the UI with accept and reject functionalities
+  // Widget to build the UI with accept and reject functionalities
+  Widget buildActionButtons() {
+    return Container(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "Note:",
+            style: TextStyle(fontWeight: FontWeight.w600),
+          ),
+          GestureDetector(
+            onTap: () {
+              // Toggle expansion logic
+              setState(() {
+                isExpanded = !isExpanded;
+              });
+            },
+            child: Text('Tap to expand'), // Placeholder for expanding action
+          ),
+          SizedBox(height: 20), // Adding space between text and buttons
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  // Add functionality for accept action
+                  // For example, you can have a function like acceptOrder()
+                },
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.green, // Set the background color to green
+                ),
+                child: Text(
+                  'Accept',
+                  style:
+                      TextStyle(color: Colors.white), // Set text color to white
+                ),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  // Show rejection dialog when the "Reject" button is pressed
+                  showRejectionDialog(context);
+                },
+                style: ElevatedButton.styleFrom(
+                  primary: Colors
+                      .red.shade700, // Set the background color to a red shade
+                ),
+                child: Text(
+                  'Reject',
+                  style:
+                      TextStyle(color: Colors.white), // Set text color to white
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  void AcceptOrder(String orderId) {
+    OrderService orderService = OrderService();
+    orderService.acceptOrder(orderId);
+  }
+
+// Function to show a dialog for entering the reason for rejection
+  void showRejectionDialog(BuildContext context) {
+    String rejectionReason = ''; // Variable to store the rejection reason
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Reason for Rejection'),
+          content: TextField(
+            onChanged: (value) {
+              rejectionReason = value; // Update the rejection reason
+            },
+            decoration: InputDecoration(
+              hintText: 'Enter reason here',
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                // Perform actions on reject with reason
+                print('Order rejected for reason: $rejectionReason');
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: Text('Reject'),
+            ),
+          ],
+        );
+      },
     );
   }
 }
