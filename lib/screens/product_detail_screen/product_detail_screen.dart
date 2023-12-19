@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:local_marketplace/common/dependency_locator.dart';
 import 'package:local_marketplace/models/productbyseller/product_by_seller.dart';
@@ -9,7 +11,6 @@ import 'package:local_marketplace/services/product/product.service.dart';
 import 'package:provider/provider.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:carousel_slider/carousel_slider.dart';
-
 
 class ProductDetailsScreen extends StatefulWidget {
   final String productId;
@@ -32,7 +33,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   void fetchProductDetails(String productId) {
     ProductService productService = ProductService();
 
-    productService.getProductDetails(productId).then((List<ProductBySeller> productList) {
+    productService
+        .getProductDetails(productId)
+        .then((List<ProductBySeller> productList) {
       if (productList.isNotEmpty) {
         setState(() {
           productDetails = productList.first;
@@ -48,48 +51,53 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
-
-
       appBar: AppBar(
         iconTheme: IconThemeData(
           color: Colors.white, //change your color here
         ),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios
-          ,color: Colors.white,), onPressed: () { Navigator.pop(context); },
+          icon: Icon(
+            Icons.arrow_back_ios,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
         title: const Text(
           "Product Details",
-          style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18, color: Colors.white),
+          style: TextStyle(
+              fontWeight: FontWeight.w800, fontSize: 18, color: Colors.white),
         ),
         backgroundColor: Colors.green, // Green app bar color
         elevation: 2, // Adding elevation for a subtle shadow
 
         actions: [
-        Consumer<CartNotifier>(
-          builder: (_, cartNotifier, __) {
-            return GestureDetector(
-              onTap: () {
-                getIt<NavigationService>().navigateTo(cartRoute, arguments: {});
-              },
-              child: cartNotifier.cartLength > 0
-                  ? badges.Badge(
-                      position: badges.BadgePosition.topEnd(top: -8, end: -5),
-                      badgeContent: Text(
-                        "${cartNotifier.cartLength}",
-                        style: TextStyle(fontSize: 8), // Adjust the font size here
-                      ),
-                      child: const Icon(Icons.shopping_cart),
-                    )
-                  : const Icon(Icons.shopping_cart),
-            );
-          },
-        ),
-        const SizedBox(
-          width: 15,
-        ),
-      ],
+          Consumer<CartNotifier>(
+            builder: (_, cartNotifier, __) {
+              return GestureDetector(
+                onTap: () {
+                  getIt<NavigationService>()
+                      .navigateTo(cartRoute, arguments: {});
+                },
+                child: cartNotifier.cartLength > 0
+                    ? badges.Badge(
+                        position: badges.BadgePosition.topEnd(top: -8, end: -5),
+                        badgeContent: Text(
+                          "${cartNotifier.cartLength}",
+                          style: TextStyle(
+                              fontSize: 8), // Adjust the font size here
+                        ),
+                        child: const Icon(Icons.shopping_cart),
+                      )
+                    : const Icon(Icons.shopping_cart),
+              );
+            },
+          ),
+          const SizedBox(
+            width: 15,
+          ),
+        ],
       ),
       body: productDetails != null
           ? ProductDetailsWidget(productDetails!)
@@ -173,9 +181,10 @@ class ProductDetailsWidget extends StatelessWidget {
                 Text(
                   productDetails.seller.address,
                   style: TextStyle(
-                    fontSize: 14.0,
+                    fontSize: 11.0,
                     color: Colors.grey,
                   ),
+                  overflow: TextOverflow.ellipsis,
                 ),
               ],
             ),
@@ -189,13 +198,14 @@ class ProductDetailsWidget extends StatelessWidget {
                       final product = getIt<ProductNotifier>().productBySeller;
                       getIt<CartNotifier>().addItemsToCart(productDetails);
 
-                       ScaffoldMessenger.of(context).showSnackBar(
+                      ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Text('"${productDetails.product.name}"'+' has been added to cart.'),
-                          duration: Duration(seconds: 2), // Adjust duration as needed
+                          content: Text('"${productDetails.product.name}"' +
+                              ' has been added to cart.'),
+                          duration:
+                              Duration(seconds: 2), // Adjust duration as needed
                         ),
                       );
-                      
                     },
                     style: ElevatedButton.styleFrom(
                       padding: EdgeInsets.symmetric(vertical: 16.0),
@@ -216,7 +226,8 @@ class ProductDetailsWidget extends StatelessWidget {
                   child: OutlinedButton(
                     onPressed: () {
                       getIt<CartNotifier>().addItemsToCart(productDetails);
-                      getIt<NavigationService>().navigateTo(cartRoute, arguments: {});
+                      getIt<NavigationService>()
+                          .navigateTo(cartRoute, arguments: {});
                     },
                     style: OutlinedButton.styleFrom(
                       side: BorderSide(color: Colors.green),

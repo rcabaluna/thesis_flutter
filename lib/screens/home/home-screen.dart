@@ -255,7 +255,6 @@ class ProductWidget extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                   fontSize: 14, // Slightly reduced font size
                 ),
-                maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
               SizedBox(height: 5),

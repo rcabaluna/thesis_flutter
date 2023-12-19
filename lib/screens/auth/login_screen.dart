@@ -39,7 +39,10 @@ class _LoginScreenState extends State<LoginScreen> {
         SnackBar(content: const Text("Successfully Logged In")),
       );
 
-      getIt<NavigationService>().navigatorKey.currentState?.pushNamedAndRemoveUntil(
+      getIt<NavigationService>()
+          .navigatorKey
+          .currentState
+          ?.pushNamedAndRemoveUntil(
             mainScreenRoute,
             (route) => false,
           );
@@ -107,7 +110,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 child: isLoading
-                    ? CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.white))
+                    ? CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white))
                     : Text('Login', style: TextStyle(color: Colors.white)),
               ),
             ),
@@ -115,14 +119,19 @@ class _LoginScreenState extends State<LoginScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text("Don't have an account?"),
+                Text(
+                  "Don't have an account?",
+                  style: TextStyle(fontSize: 12),
+                ),
                 TextButton(
                   onPressed: () {
-                    getIt<NavigationService>().navigateTo(registerRoute, arguments: {});
+                    getIt<NavigationService>()
+                        .navigateTo(registerRoute, arguments: {});
                   },
                   child: Text(
                     "Sign Up",
-                    style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                        color: Colors.green, fontWeight: FontWeight.bold),
                   ),
                 ),
               ],

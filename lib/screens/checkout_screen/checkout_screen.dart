@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:local_marketplace/common/dependency_locator.dart';
 import 'package:local_marketplace/models/cart/cart.dart';
@@ -131,7 +133,7 @@ class CheckoutScreenState extends State<CheckoutScreen> {
                           Padding(
                             padding: EdgeInsets.symmetric(horizontal: 20),
                             child: BuildInputField(
-                              maxLines: 3,
+                              maxLines: 2,
                               controller: notes,
                               obscureText: false,
                               hintText: "Enter Notes",
