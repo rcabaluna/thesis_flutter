@@ -7,8 +7,6 @@ import 'package:local_marketplace/notifiers/app_notifier.dart';
 import 'package:local_marketplace/routes/constants.dart';
 import 'package:local_marketplace/services/common/navigation_service.dart';
 import 'package:local_marketplace/services/user_auth/auth.service.dart';
-import 'package:local_marketplace/widget/input_field/input_field.dart';
-import 'package:loader_overlay/loader_overlay.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -103,7 +101,7 @@ class _LoginScreenState extends State<LoginScreen> {
               child: ElevatedButton(
                 onPressed: isLoading ? null : _login,
                 style: ElevatedButton.styleFrom(
-                  primary: Colors.green,
+                  backgroundColor: Colors.green,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),

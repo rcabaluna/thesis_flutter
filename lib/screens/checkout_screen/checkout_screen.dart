@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:local_marketplace/common/dependency_locator.dart';
 import 'package:local_marketplace/models/cart/cart.dart';
+import 'package:local_marketplace/models/orders/orders_model.dart';
+import 'package:local_marketplace/models/placeorder/placeorder_model.dart';
 import 'package:local_marketplace/notifiers/cart/cart_notifier.dart';
 import 'package:local_marketplace/routes/constants.dart';
 import 'package:local_marketplace/services/cart/cart_service.dart';
 import 'package:local_marketplace/services/common/navigation_service.dart';
+import 'package:local_marketplace/widget/input_field/input_field.dart';
 import 'package:provider/provider.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 
@@ -14,17 +17,26 @@ class CheckoutScreen extends StatefulWidget {
 }
 
 class CheckoutScreenState extends State<CheckoutScreen> {
+  bool isMeetUp = false;
+  bool isDelivery = false;
+  TextEditingController address = TextEditingController();
+  TextEditingController notes = TextEditingController();
+  var deliveryOption;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios
-          ,color: Colors.white,), onPressed: () { Navigator.pop(context); },
+          icon: Icon(Icons.arrow_back_ios, color: Colors.white),
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
         title: const Text(
           "Checkout",
-          style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18, color: Colors.white),
+          style: TextStyle(
+              fontWeight: FontWeight.w800, fontSize: 18, color: Colors.white),
         ),
         backgroundColor: Colors.green, // Green app bar color
       ),
@@ -34,6 +46,16 @@ class CheckoutScreenState extends State<CheckoutScreen> {
             hasScrollBody: true,
             child: Column(
               children: [
+                Padding(
+                  padding: EdgeInsets.all(8.0), // Adjust the value as needed
+                  child: Text(
+                    'Order Details',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w800,
+                      fontSize: 25,
+                    ),
+                  ),
+                ),
                 Expanded(
                   child: Consumer<CartNotifier>(
                     builder: (_, notifier, __) {
@@ -45,11 +67,9 @@ class CheckoutScreenState extends State<CheckoutScreen> {
                             child: _buildProductList(notifier.cartItems),
                           ),
                           Padding(
-                            padding:
-                                const EdgeInsets.only(left: 20, right: 20),
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
                             child: Row(
-                              mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 const Text(
                                   "Order Total:",
@@ -68,6 +88,55 @@ class CheckoutScreenState extends State<CheckoutScreen> {
                               ],
                             ),
                           ),
+                          SizedBox(height: 10), // Adjusted SizedBox height
+                          DropdownButtonFormField<String>(
+                            padding: EdgeInsets.symmetric(horizontal: 20),
+                            decoration: InputDecoration(
+                              labelText: 'Select Delivery Option',
+                              border: OutlineInputBorder(),
+                            ),
+                            value: deliveryOption,
+                            onChanged: (String? value) {
+                              setState(() {
+                                deliveryOption = value!;
+                                if (deliveryOption == 'Meet-Up') {
+                                  isMeetUp = true;
+                                  isDelivery = false;
+                                } else if (deliveryOption == 'Delivery') {
+                                  isDelivery = true;
+                                  isMeetUp = false;
+                                }
+                              });
+                            },
+                            items: ['Meet-Up', 'Delivery']
+                                .map<DropdownMenuItem<String>>((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value),
+                              );
+                            }).toList(),
+                          ),
+                          SizedBox(height: 10), // Adjusted SizedBox height
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 20),
+                            child: BuildInputField(
+                              maxLines: 1,
+                              controller: address,
+                              obscureText: false,
+                              hintText: "Enter Address",
+                            ),
+                          ),
+
+                          SizedBox(height: 10), // Adjusted SizedBox height
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 20),
+                            child: BuildInputField(
+                              maxLines: 3,
+                              controller: notes,
+                              obscureText: false,
+                              hintText: "Enter Notes",
+                            ),
+                          ),
                         ],
                       );
                     },
@@ -76,54 +145,82 @@ class CheckoutScreenState extends State<CheckoutScreen> {
                 Row(
                   children: [
                     Expanded(
-                      child: ElevatedButton(
-                        onPressed: () async {
-                          final CartService cartService = CartService();
-                          List<Map<String, dynamic>> orders = [];
-                          List<Cart> cartItems =
-                              getIt<CartNotifier>().cartItems;
-                          for (var cart in cartItems) {
-                            orders.add({
-                              "quantity": cart.quantity,
-                              "productBySellerId": cart.product.id
-                            });
-                          }
-                          try {
-                            await cartService.order(orders);
-                            if (context.mounted) {
-                              context.loaderOverlay.hide();
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text(
-                                    "Your order has been placed.",
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20,
+                            vertical: 25), // Adjust the padding as needed
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            final CartService cartService = CartService();
+                            List<Map<String, dynamic>> orders = [];
+                            List<Cart> cartItems =
+                                getIt<CartNotifier>().cartItems;
+                            for (var cart in cartItems) {
+                              orders.add({
+                                "quantity": cart.quantity,
+                                "productBySellerId": cart.product.id
+                              });
+                            }
+
+                            PlaceOrder orderSummary = PlaceOrder(
+                              deliveryType: deliveryOption,
+                              address: address.text,
+                              notes: notes.text,
+                            );
+
+                            // Convert PlaceOrder object to JSON
+                            Map<String, dynamic> orderJson =
+                                orderSummary.toJson();
+
+                            try {
+                              await cartService.order(orderSummary, orders);
+                              if (context.mounted) {
+                                context.loaderOverlay.hide();
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                      "Your order has been placed.",
+                                    ),
                                   ),
-                                ),
-                              );
-                              getIt<NavigationService>().navigateTo( mainScreenRoute, arguments: {},);
-                              getIt<CartNotifier>().clearCart(); // Clear the cart here
+                                );
+                                getIt<NavigationService>()
+                                    .navigateTo(mainScreenRoute, arguments: {});
+                                getIt<CartNotifier>()
+                                    .clearCart(); // Clear the cart here
+                              }
+                            } catch (e) {
+                              if (context.mounted) {
+                                context.loaderOverlay.hide();
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text("Error ordering"),
+                                  ),
+                                );
+                              }
                             }
-                          } catch (e) {
-                            if (context.mounted) {
-                              context.loaderOverlay.hide();
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text("Error ordering"),
-                                ),
-                              );
-                            }
-                          }
-                        },
-                        child: const Text("Place Order"),
-                        style: ElevatedButton.styleFrom(
+                          },
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 12),
                             backgroundColor: Colors.green,
-                            textStyle: TextStyle(
+                            textStyle: const TextStyle(
                               color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
                             ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(3),
+                            ),
+                            elevation: 5,
                           ),
+                          child: const Text(
+                            "Place Order",
+                          ),
+                        ),
                       ),
                     ),
                   ],
-                ),
+                )
               ],
             ),
           ),

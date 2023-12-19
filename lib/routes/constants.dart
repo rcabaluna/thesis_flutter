@@ -16,6 +16,7 @@ const cartRoute = '/cart';
 const checkoutRoute = "/checkout";
 
 const loginRoute = "/login";
+const logoutRoute = "/logout";
 const registerRoute = '/registration';
 
 const orderHistoryRoute = '/order-history';

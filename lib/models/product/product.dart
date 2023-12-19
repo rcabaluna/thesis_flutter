@@ -22,5 +22,4 @@ class Product {
     id = json["_id"];
   }
   get sellerId => null;
-
 }

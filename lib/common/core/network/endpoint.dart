@@ -10,10 +10,11 @@ const CityAndMunicipality_URL = "/api/cities-municipalities";
 
 const REGISTER_URL = "/api/auth/register";
 const LOGIN_URL = "/api/auth/login";
+const LOGOUT_URL = "/api/auth/logout";
 const USERS_URL = "/api/users";
 
 const PRODUCT_URL = "/api/product";
 const CATEGORY_URL = "/api/category";
 const SHOP_URL = "/api/shop";
 
-const ORDER_URL = "/api/order";
+const ORDER_URL = "/api/orders/";

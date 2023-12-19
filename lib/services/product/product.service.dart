@@ -6,21 +6,18 @@ import 'package:local_marketplace/models/product/product.dart';
 import 'package:local_marketplace/models/productbyseller/product_by_seller.dart';
 import 'package:local_marketplace/models/seller/seller.dart';
 
-
 class ProductService {
   final NetworkService _networkService = NetworkService();
 
   Future<List<ProductBySeller>> getProducts() async {
-
-    try {  
-
+    try {
       final result = await _networkService.getRequest(PRODUCT_URL);
       List<Map<String, dynamic>> data = List<Map<String, dynamic>>.from(result);
-  
+
       return data.map((json) {
         Product product = Product.fromJson(json["productId"]);
-
         Seller seller = Seller.fromJson(json["sellerId"]);
+
         var urls = (json["imageUrls"] as List<dynamic>)
             .map((e) => e.toString())
             .toList();
@@ -40,7 +37,6 @@ class ProductService {
   Future<List<ProductBySeller>> searchProducts(String searchTerm) async {
     final url = "$PRODUCT_URL/name/$searchTerm";
     try {
-
       final result = await _networkService.getRequest(url);
       List<Map<String, dynamic>> data = List<Map<String, dynamic>>.from(result);
       return data.map((json) {
@@ -63,10 +59,10 @@ class ProductService {
     }
   }
 
-  Future<List<ProductBySeller>> searchProductsbyCategory(String searchInput) async {
+  Future<List<ProductBySeller>> searchProductsbyCategory(
+      String searchInput) async {
     final url = "$PRODUCT_URL/categoryId/$searchInput";
-     try {
-
+    try {
       final result = await _networkService.getRequest(url);
       List<Map<String, dynamic>> data = List<Map<String, dynamic>>.from(result);
       return data.map((json) {
@@ -90,11 +86,9 @@ class ProductService {
   }
 
   Future<List<ProductBySeller>> getProductDetails(String searchInput) async {
-
     final url = "$PRODUCT_URL/productId/$searchInput";
 
     try {
-
       final result = await _networkService.getRequest(url);
       List<Map<String, dynamic>> data = List<Map<String, dynamic>>.from(result);
       return data.map((json) {
@@ -115,7 +109,5 @@ class ProductService {
     } on DioException catch (e) {
       return [];
     }
-}
- 
-
+  }
 }

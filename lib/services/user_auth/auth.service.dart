@@ -1,4 +1,7 @@
+// ignore_for_file: deprecated_member_use
+
 import 'dart:convert';
+import 'dart:ffi';
 
 import 'package:local_marketplace/common/core/network/endpoint.dart';
 import 'package:local_marketplace/common/core/network/index.dart';
@@ -25,6 +28,18 @@ class AuthService {
       final decoded = jsonDecode(e.response.toString());
       print(e);
       throw (decoded["error"]);
+    }
+  }
+
+  Future<dynamic> logout() async {
+  try {
+    final result = await _networkService.postRequest(LOGOUT_URL);
+    return result;
+  } on DioError catch (e) {
+    
+      // Handle cases where the DioError doesn't have a response or data
+      print('DioError occurred: $e');
+      throw 'An error occurred during logout';
     }
   }
 }
