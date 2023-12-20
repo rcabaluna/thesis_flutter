@@ -20,21 +20,7 @@ class ShopOrderDetailsScreenState extends State<ShopOrderDetailsScreen> {
 
   void initState() {
     super.initState();
-    fetchProductDetails(widget.orderId);
     getOrderSummary(widget.orderId);
-  }
-
-  void fetchProductDetails(String orderId) {
-    String orderIdx = orderId;
-    OrderService orderService = OrderService();
-
-    orderService
-        .getShopOrderDetails(orderIdx)
-        .then((List<OrderDetails> orderDetailsList) {
-      orderDetails = orderDetailsList.first;
-    }).catchError((error) {
-      print("Error fetching product details: $error");
-    });
   }
 
   void getOrderSummary(String orderId) {

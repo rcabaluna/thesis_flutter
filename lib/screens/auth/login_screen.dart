@@ -33,7 +33,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
       await getIt<AppNotifier>().saveAccessToken(response["accessToken"]);
       await getIt<AppNotifier>().fetchUserDetails();
-      // await getIt<AppNotifier>().getMyShop();
+      await getIt<AppNotifier>().getMyShop();
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: const Text("Successfully Logged In")),
