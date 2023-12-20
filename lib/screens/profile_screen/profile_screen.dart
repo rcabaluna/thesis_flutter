@@ -62,8 +62,8 @@ class ProfileScreenState extends State<ProfileScreen> {
           _buildDirectory(
               "My Shop",
               getIt<AppNotifier>().myShop != null
-                  ? registrationFeeRoute
-                  : shopProfileRoute),
+                  ? shopProfileRoute
+                  : shopWelcomeRoute),
           _buildDirectory("Edit Profile", editProfileRoute),
           _buildDirectory("Logout", logoutRoute),
         ],
