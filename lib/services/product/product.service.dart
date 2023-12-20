@@ -5,6 +5,7 @@ import 'package:local_marketplace/common/core/network/index.dart';
 import 'package:local_marketplace/models/product/product.dart';
 import 'package:local_marketplace/models/productbyseller/product_by_seller.dart';
 import 'package:local_marketplace/models/seller/seller.dart';
+import 'package:local_marketplace/models/user/user.dart';
 
 class ProductService {
   final NetworkService _networkService = NetworkService();

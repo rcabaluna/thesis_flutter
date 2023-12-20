@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:local_marketplace/common/constants.dart';
 import 'package:local_marketplace/common/dependency_locator.dart';
 import 'package:local_marketplace/models/orders/order_details_model.dart';
+import 'package:local_marketplace/models/orders/orders_model.dart';
 import 'package:local_marketplace/routes/constants.dart';
 import 'package:local_marketplace/services/common/navigation_service.dart';
 import 'package:local_marketplace/services/order/order.service.dart';
@@ -17,8 +18,9 @@ class OrderDetailScreen extends StatefulWidget {
 }
 
 class OrderDetailScreenState extends State<OrderDetailScreen> {
-  OrderDetails? orderDetails;
+  OrderSummary? varOrderSummary;
   String xstatus = "Accepted";
+  @override
   void initState() {
     super.initState();
     fetchProductDetails(widget.orderId);
@@ -28,10 +30,8 @@ class OrderDetailScreenState extends State<OrderDetailScreen> {
     String orderIdx = orderId;
     OrderService orderService = OrderService();
 
-    orderService
-        .getShopOrderDetails(orderIdx)
-        .then((List<OrderDetails> orderDetailsList) {
-      orderDetails = orderDetailsList.first;
+    orderService.getOrderSummary(orderIdx).then((List<OrderSummary> datax) {
+      varOrderSummary = datax.first;
     }).catchError((error) {
       print("Error fetching product details: $error");
     });
@@ -94,18 +94,18 @@ class OrderDetailScreenState extends State<OrderDetailScreen> {
         children: [
           Center(
               child: Text(
-            'Order ID: 34T3T2456YW246',
+            'Order ID: ${widget.orderId}',
             style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800),
           )),
           Center(
-            child: Text('Ordered on 2023-12-18 08:23:12',
+            child: Text('Ordered on 2023-10-10',
                 style: TextStyle(fontSize: 10, color: Colors.grey)),
           ),
           SizedBox(
             height: 18,
           ),
           Text(
-            "Meet Up to or Delivery to",
+            "${varOrderSummary?.deliveryType} To:",
             style: TextStyle(
               fontSize: 13,
             ),
@@ -130,7 +130,7 @@ class OrderDetailScreenState extends State<OrderDetailScreen> {
                       });
                     },
                     child: Text(
-                      "Misamis Oriental, Opol Poblacion",
+                      "${varOrderSummary?.address}",
                       overflow: isExpanded
                           ? TextOverflow.visible
                           : TextOverflow.ellipsis,
@@ -153,7 +153,7 @@ class OrderDetailScreenState extends State<OrderDetailScreen> {
                   width: 10,
                 ),
                 Text(
-                  "Jay Kim Lusing",
+                  "Customer Name",
                   style: TextStyle(fontSize: 13),
                 )
               ],
@@ -171,7 +171,7 @@ class OrderDetailScreenState extends State<OrderDetailScreen> {
                   width: 10,
                 ),
                 Text(
-                  "09662964893",
+                  "Customer Phone",
                   style: TextStyle(fontSize: 13),
                 )
               ],
@@ -207,7 +207,7 @@ class OrderDetailScreenState extends State<OrderDetailScreen> {
                   width: 25,
                 ),
                 Text(
-                  "Atbang sa Gram",
+                  "${varOrderSummary?.notes}",
                   style: TextStyle(fontSize: 13, fontStyle: FontStyle.italic),
                 ),
                 SizedBox(

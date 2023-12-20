@@ -6,7 +6,11 @@ import 'package:dio/dio.dart';
 
 class NetworkService {
   // final String _baseUrl = "95.111.202.26:3000";
+<<<<<<< HEAD
   final String _baseUrl = "192.168.96.203:3000";
+=======
+  final String _baseUrl = "192.168.128.38:3000";
+>>>>>>> 63fa0ca84a293d66d915c41cfb27a14acee688fa
   // final String _baseUrl = "192.168.204.234:3000";
 
   late Dio _dio;

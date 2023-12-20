@@ -1,22 +1,18 @@
-import 'package:local_marketplace/models/user/user.dart';
-
 class OrderSummary {
-  late String deliveryType;
-  late String address;
-  late String notes;
-  late User user;
+  final String deliveryType;
+  final String address;
+  final String notes;
 
   OrderSummary({
     required this.deliveryType,
     required this.address,
     required this.notes,
-    required this.user,
   });
 
-  // OrderSummary.fromJson(Map<String, dynamic> json) {
-  //   deliveryType = json["deliveryType"];
-  //   address = json["address"];
-  //   notes = json["notes"];
-  //   user = json["notes"];
-  // }
+  factory OrderSummary.fromJson(Map<String, dynamic> json) {
+    return OrderSummary(
+        deliveryType: json["deliveryType"],
+        address: json["address"],
+        notes: json["notes"]);
+  }
 }

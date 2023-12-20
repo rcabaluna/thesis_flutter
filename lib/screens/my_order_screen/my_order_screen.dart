@@ -48,7 +48,7 @@ class MyOrderScreenState extends State<MyOrderScreen> {
             if (orders
                 .isNotEmpty) // Conditionally show the text if orders exist
               Text(
-                "List of My Orders: ",
+                "List of My Orders:",
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
@@ -76,12 +76,14 @@ class MyOrderScreenState extends State<MyOrderScreen> {
     );
   }
 
+// START SEARCH ON OPEN
   @override
   void initState() {
     super.initState();
     getOrdersList();
   }
 
+// GET ORDERS FUNCTION
   void getOrdersList() {
     setState(() {
       isSearching = true;

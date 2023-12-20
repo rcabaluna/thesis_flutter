@@ -13,6 +13,7 @@ class AppNotifier extends ChangeNotifier {
   final LocationService _locationService = LocationService();
   final UserService _userService = UserService();
   final ShopService _shopService = ShopService();
+
   bool _isLoggedIn = false;
   bool get isLoggedIn => _isLoggedIn;
 
@@ -63,7 +64,6 @@ class AppNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-
   List<Location> _cities = [];
   List<Location> get cities => _cities;
 
@@ -71,8 +71,6 @@ class AppNotifier extends ChangeNotifier {
     _cities = cities;
     notifyListeners();
   }
-
-
 
   List<Location> _munCity = [];
   List<Location> get munCity => _munCity;
@@ -145,7 +143,6 @@ class AppNotifier extends ChangeNotifier {
   }
 
   Future getMyShop() async {
-    
     try {
       final result = await _shopService.getMySellerDetails();
       myShop = Seller.fromJson(result);

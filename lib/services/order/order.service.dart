@@ -1,10 +1,13 @@
 // ignore_for_file: depend_on_referenced_packages_TypeError (type '_Map<String, dynamic>' is not a subtype of type 'Iterable<dynamic>')
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:local_marketplace/common/core/network/endpoint.dart';
 import 'package:local_marketplace/common/core/network/index.dart';
 import 'package:local_marketplace/models/orders/order_details_model.dart';
 import 'package:local_marketplace/models/orders/orders_model.dart';
 import 'package:local_marketplace/models/product/product.dart';
+import 'package:local_marketplace/models/seller/seller.dart';
 import 'package:local_marketplace/models/shop/shop_orders_model.dart';
 import 'package:local_marketplace/models/customer/customer_details.dart';
 
@@ -39,12 +42,15 @@ class OrderService {
       List<Map<String, dynamic>> data = List<Map<String, dynamic>>.from(result);
 
       return data.map((json) {
+        Seller seller = Seller.fromJson(json["sellerId"]);
+
         return OrderDetails(
             id: json['_id'],
             orderId: json['orderId'],
             quantity: json['quantity'],
             status: json['status'],
             total: json['total'],
+            seller: seller,
             createdAt: json['createdAt'],
             updatedAt: json['updatedAt']);
       }).toList();
@@ -95,33 +101,20 @@ class OrderService {
     }
   }
 
-  // Future<List<OrderSummary>> getOrderSummary(String orderIdx) async {
-  //   final url = "$ORDER_URL/get-order-summary/$orderIdx";
-  //   try {
-  //     final result = await _networkService.getRequest(url);
-
-  //     List<Map<String, dynamic>> data = List<Map<String, dynamic>>.from(result);
-  //     return data.map((json) {
-  //       print(json);
-  //       return OrderSummary(
-  //           deliveryType: json['deliveryType'],
-  //           address: json['address'],
-  //           notes: json['notes'],
-  //           user: json['user']);
-  //     }).toList();
-  //   } on DioException catch (e) {
-  //     print(e);
-  //     return [];
-  //   }
-  // }
-
-  Future<dynamic> getOrderSummary(String orderIdx) async {
+  Future<List<OrderSummary>> getOrderSummary(String orderIdx) async {
     final url = "$ORDER_URL/get-order-summary/$orderIdx";
     try {
       final result = await _networkService.getRequest(url);
-      return result;
+      List<Map<String, dynamic>> data = List<Map<String, dynamic>>.from(result);
+      return data.map((json) {
+        return OrderSummary(
+            deliveryType: json['deliveryType'],
+            address: json['address'],
+            notes: json['notes']);
+      }).toList();
     } on DioException catch (e) {
-      throw false;
+      print(e);
+      throw 'Error';
     }
   }
 }
